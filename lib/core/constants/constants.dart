@@ -6,6 +6,9 @@ const double kPadding = 20;
 
 const SUPABASE_URL = String.fromEnvironment('SUPABASE_URL');
 const SUPABASE_ANON_KEY = String.fromEnvironment('SUPABASE_ANON_KEY');
+const ANDROID_ID_GOOGLE_ACCOUNT = String.fromEnvironment(
+  'ANDROID_ID_GOOGLE_ACCOUNT',
+);
 
 extension ContextExtensions on BuildContext {
   ColorScheme get myTheme => Theme.of(this).colorScheme;

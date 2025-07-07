@@ -1,4 +1,4 @@
-package com.example.school_planting
+package com.maktub.greenmap
 
 import io.flutter.embedding.android.FlutterActivity
 

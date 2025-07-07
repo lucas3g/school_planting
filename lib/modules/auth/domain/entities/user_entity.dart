@@ -1,6 +1,6 @@
 import 'package:school_planting/core/domain/vos/text_vo.dart';
 
-class User {
+class UserEntity {
   TextVO _id;
   TextVO _email;
   TextVO _name;
@@ -18,7 +18,7 @@ class User {
   TextVO get imageUrl => _imageUrl ?? TextVO('');
   void setImageUrl(String imageUrl) => _imageUrl = TextVO(imageUrl);
 
-  User({
+  UserEntity({
     required String id,
     required String email,
     required String name,
