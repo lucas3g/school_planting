@@ -1,0 +1,32 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "[dev] Green Map",
+            "request": "launch",
+            "type": "dart",
+            "toolArgs": [
+                "--dart-define-from-file",
+                "SUPABASE.env",
+            ],
+            "env": {
+              "FLUTTER_ROOT": "${workspaceFolder}/.fvm/flutter_sdk"
+            }
+        },
+        {
+            "name": "[prod] Green Map",
+            "request": "launch",
+            "type": "dart",
+          //   "args": [
+          //       "--release"
+          //   ],
+            "toolArgs": [
+                "--dart-define-from-file",
+                "SUPABASE.env",
+            ],
+            "env": {
+              "FLUTTER_ROOT": "${workspaceFolder}/.fvm/flutter_sdk"
+            }
+        },
+    ]
+  }
