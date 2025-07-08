@@ -53,8 +53,6 @@ class AuthDatasourceImpl implements AuthDatasource {
 
   @override
   Future<UserEntity?> autoLogin() async {
-    await Supabase.instance.client.auth.signOut();
-
     final user = Supabase.instance.client.auth.currentUser;
 
     if (user == null) {
@@ -66,5 +64,10 @@ class AuthDatasourceImpl implements AuthDatasource {
     AppGlobal.instance.setUser(userEntity);
 
     return userEntity;
+  }
+
+  @override
+  Future<void> logout() async {
+    await Supabase.instance.client.auth.signOut();
   }
 }

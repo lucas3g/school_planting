@@ -7,6 +7,8 @@ abstract class AuthStates {
   AuthSuccessState success(UserEntity user) => AuthSuccessState(user: user);
 
   AuthFailureState failure(String message) => AuthFailureState(message);
+
+  LogoutAccountState logout() => LogoutAccountState();
 }
 
 class AuthInitialState extends AuthStates {}
@@ -24,3 +26,5 @@ class AuthFailureState extends AuthStates {
 
   AuthFailureState(this.message);
 }
+
+class LogoutAccountState extends AuthStates {}

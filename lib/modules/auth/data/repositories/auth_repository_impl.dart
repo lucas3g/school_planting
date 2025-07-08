@@ -36,4 +36,17 @@ class AuthRepositoryImpl implements AuthRepository {
       return reject(AuthException('Erro ao tentar fazer login'));
     }
   }
+
+  @override
+  Future<EitherOf<AppFailure, VoidSuccess>> logout() async {
+    try {
+      await _authDatasource.logout();
+
+      return resolve(const VoidSuccess());
+    } on AppFailure catch (error) {
+      return reject(error);
+    } catch (error) {
+      return reject(AuthException('auth.error.logoutFailed'));
+    }
+  }
 }
