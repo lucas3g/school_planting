@@ -11,8 +11,8 @@ class SupabaseClientImpl implements ISupabaseClient {
   final SupabaseClient _client;
 
   SupabaseClientImpl()
-      : _client = Supabase.instance.client,
-        _auth = Supabase.instance.client.auth;
+    : _client = Supabase.instance.client,
+      _auth = Supabase.instance.client.auth;
 
   @override
   Future<AuthResponse> signInWithIdToken({
@@ -54,17 +54,21 @@ class SupabaseClientImpl implements ISupabaseClient {
   Future<List<dynamic>> select({
     required String table,
     required String columns,
-    required String orderBy,
+    String? orderBy,
   }) async {
-    final data = await _client.from(table).select(columns).order(orderBy);
+    dynamic data;
+
+    if (orderBy == null || orderBy.isEmpty) {
+      data = await _client.from(table).select(columns);
+    } else {
+      data = await _client.from(table).select(columns).order(orderBy);
+    }
+
     return data;
   }
 
   @override
-  String getPublicUrl({
-    required String bucket,
-    required String path,
-  }) {
-    return _client.storage.from(bucket).getPublicUrl(path);
+  Future<String> getImageUrl({required String bucket, required String path}) {
+    return _client.storage.from(bucket).createSignedUrl(path, 60 * 60);
   }
 }

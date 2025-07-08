@@ -27,11 +27,8 @@ abstract class ISupabaseClient {
   Future<List<dynamic>> select({
     required String table,
     required String columns,
-    required String orderBy,
+    String? orderBy,
   });
 
-  String getPublicUrl({
-    required String bucket,
-    required String path,
-  });
+  Future<String> getImageUrl({required String bucket, required String path});
 }

@@ -2,12 +2,11 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:school_planting/modules/home/domain/entities/planting_detail_entity.dart';
-
 
 class MapPlantingController {
   final Set<Marker> markers = {};
@@ -19,7 +18,9 @@ class MapPlantingController {
     int size = 80,
   }) async {
     final HttpClient httpClient = HttpClient();
-    final HttpClientRequest request = await httpClient.getUrl(Uri.parse(imageUrl));
+    final HttpClientRequest request = await httpClient.getUrl(
+      Uri.parse(imageUrl),
+    );
     final HttpClientResponse response = await request.close();
     final bytes = await consolidateHttpClientResponseBytes(response);
 
@@ -43,10 +44,9 @@ class MapPlantingController {
 
     canvas.save();
     canvas.clipPath(
-      Path()
-        ..addOval(
-          Rect.fromCircle(center: Offset(radius, radius), radius: radius - 4),
-        ),
+      Path()..addOval(
+        Rect.fromCircle(center: Offset(radius, radius), radius: radius - 4),
+      ),
     );
     canvas.drawImage(avatarImage, Offset.zero, Paint());
     canvas.restore();
@@ -58,66 +58,15 @@ class MapPlantingController {
     final ByteData? byteData = await finalImage.toByteData(
       format: ui.ImageByteFormat.png,
     );
-    return BitmapDescriptor.fromBytes(byteData!.buffer.asUint8List());
+    return BitmapDescriptor.bytes(byteData!.buffer.asUint8List());
   }
-
-  // Future<BitmapDescriptor> _getCircularAvatarMarkerIcon(
-  //   String imageUrl, {
-  //   int size = 80,
-  // }) async {
-  //   final ClientHttp clientHttp = getIt<ClientHttp>();
-  //   final HttpResponseEntity<dynamic> response = await clientHttp.getImage(
-  //     imageUrl,
-  //   );
-  //   final Uint8List imageBytes = response.data;
-
-  //   final ui.Codec codec = await ui.instantiateImageCodec(
-  //     imageBytes,
-  //     targetWidth: size,
-  //     targetHeight: size,
-  //   );
-  //   final ui.FrameInfo frame = await codec.getNextFrame();
-  //   final ui.Image avatarImage = frame.image;
-
-  //   final ui.PictureRecorder recorder = ui.PictureRecorder();
-  //   final Canvas canvas = Canvas(recorder);
-  //   final Paint paint = Paint();
-  //   final double radius = size / 2;
-
-  //   canvas.drawCircle(
-  //     Offset(radius, radius),
-  //     radius,
-  //     Paint()..color = Colors.white,
-  //   );
-
-  //   canvas.save();
-  //   canvas.clipPath(
-  //     Path()..addOval(
-  //       Rect.fromCircle(center: Offset(radius, radius), radius: radius - 4),
-  //     ),
-  //   );
-  //   canvas.drawImage(avatarImage, Offset.zero, paint);
-  //   canvas.restore();
-
-  //   final ui.Image finalImage = await recorder.endRecording().toImage(
-  //     size,
-  //     size,
-  //   );
-  //   final ByteData? byteData = await finalImage.toByteData(
-  //     format: ui.ImageByteFormat.png,
-  //   );
-  //   return BitmapDescriptor.bytes(byteData!.buffer.asUint8List());
-  // }
 
   Future<void> startLocationUpdates(VoidCallback onUpdated) async {
     final permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever)
+        permission == LocationPermission.deniedForever) {
       return;
-
-    // final BitmapDescriptor icon = await _getCircularAvatarMarkerIcon(
-    //   AppGlobal.instance.user!.imageUrl.value,
-    // );
+    }
 
     final Position current = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
@@ -169,8 +118,9 @@ class MapPlantingController {
     void Function(PlantingDetailEntity) onTap,
   ) async {
     for (final item in plantings) {
-      final BitmapDescriptor icon =
-          await _getCircularAvatarMarkerIcon(item.imageUrl);
+      final BitmapDescriptor icon = await _getCircularAvatarMarkerIcon(
+        item.imageUrl,
+      );
 
       markers.add(
         Marker(
@@ -192,7 +142,8 @@ class MapPlantingController {
   Future<void> moveCameraToCurrentLocation({double zoom = 18}) async {
     final permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) return;
+        permission == LocationPermission.deniedForever)
+      return;
 
     final Position current = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
