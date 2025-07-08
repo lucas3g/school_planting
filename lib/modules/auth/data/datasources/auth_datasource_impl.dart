@@ -7,9 +7,14 @@ import 'package:school_planting/modules/auth/data/adapters/user_adapter.dart';
 import 'package:school_planting/modules/auth/data/datasources/auth_datasource.dart';
 import 'package:school_planting/modules/auth/domain/entities/user_entity.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:school_planting/core/data/clients/supabase/supabase_client_interface.dart';
 
 @Injectable(as: AuthDatasource)
 class AuthDatasourceImpl implements AuthDatasource {
+  final ISupabaseClient _supabaseClient;
+
+  AuthDatasourceImpl({required ISupabaseClient supabaseClient})
+      : _supabaseClient = supabaseClient;
   @override
   Future<UserEntity> loginWithGoogleAccount() async {
     try {
@@ -31,7 +36,7 @@ class AuthDatasourceImpl implements AuthDatasource {
 
       final idToken = googleUser.authentication.idToken;
 
-      final result = await Supabase.instance.client.auth.signInWithIdToken(
+      final result = await _supabaseClient.signInWithIdToken(
         provider: OAuthProvider.google,
         idToken: idToken!,
         accessToken: accessToken,
@@ -53,7 +58,7 @@ class AuthDatasourceImpl implements AuthDatasource {
 
   @override
   Future<UserEntity?> autoLogin() async {
-    final user = Supabase.instance.client.auth.currentUser;
+    final user = _supabaseClient.currentUser;
 
     if (user == null) {
       return null;
@@ -68,6 +73,6 @@ class AuthDatasourceImpl implements AuthDatasource {
 
   @override
   Future<void> logout() async {
-    await Supabase.instance.client.auth.signOut();
+    await _supabaseClient.signOut();
   }
 }
