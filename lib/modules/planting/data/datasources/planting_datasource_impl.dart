@@ -18,10 +18,7 @@ class PlantingDatasourceImpl implements PlantingDatasource {
     required File image,
     required String imageName,
   }) async {
-    await _client.storage.from('plantings').upload(
-      imageName,
-      image,
-    );
+    await _client.storage.from('escolaverdebucket').upload(imageName, image);
 
     await _client.from('user_plantings').insert({
       'user_id': userId,

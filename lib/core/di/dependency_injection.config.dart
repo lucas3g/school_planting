@@ -24,6 +24,18 @@ import '../../modules/auth/domain/usecases/login_with_google_account.dart'
     as _i854;
 import '../../modules/auth/domain/usecases/logout_account.dart' as _i720;
 import '../../modules/auth/presentation/controller/auth_bloc.dart' as _i311;
+import '../../modules/planting/data/datasources/planting_datasource.dart'
+    as _i155;
+import '../../modules/planting/data/datasources/planting_datasource_impl.dart'
+    as _i64;
+import '../../modules/planting/data/repositories/planting_repository_impl.dart'
+    as _i631;
+import '../../modules/planting/domain/repositories/planting_repository.dart'
+    as _i91;
+import '../../modules/planting/domain/usecases/create_planting_usecase.dart'
+    as _i1045;
+import '../../modules/planting/presentation/controller/planting_bloc.dart'
+    as _i97;
 import '../data/clients/http/client_http.dart' as _i777;
 import '../data/clients/http/dio_http_client_impl.dart' as _i14;
 import '../data/clients/shared_preferences/local_storage_interface.dart'
@@ -47,14 +59,32 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
     );
     gh.factory<_i361.Dio>(() => registerModule.dio);
+    gh.lazySingleton<_i155.PlantingDatasource>(
+      () => _i64.PlantingDatasourceImpl(),
+    );
     gh.factory<_i824.ILocalStorage>(() => _i755.SharedPreferencesService());
     gh.singleton<_i86.ISupabaseClient>(() => _i788.SupabaseClientImpl());
+    gh.factory<_i91.PlantingRepository>(
+      () => _i631.PlantingRepositoryImpl(
+        datasource: gh<_i155.PlantingDatasource>(),
+      ),
+    );
+    gh.factory<_i1045.CreatePlantingUseCase>(
+      () => _i1045.CreatePlantingUseCase(
+        repository: gh<_i91.PlantingRepository>(),
+      ),
+    );
     gh.singleton<_i777.ClientHttp>(
       () => _i14.DioClientHttpImpl(dio: gh<_i361.Dio>()),
     );
     gh.factory<_i655.AuthDatasource>(
       () =>
           _i275.AuthDatasourceImpl(supabaseClient: gh<_i86.ISupabaseClient>()),
+    );
+    gh.factory<_i97.PlantingBloc>(
+      () => _i97.PlantingBloc(
+        createPlantingUseCase: gh<_i1045.CreatePlantingUseCase>(),
+      ),
     );
     gh.factory<_i779.AuthRepository>(
       () =>
