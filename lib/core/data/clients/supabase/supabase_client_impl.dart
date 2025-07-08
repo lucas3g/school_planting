@@ -49,4 +49,22 @@ class SupabaseClientImpl implements ISupabaseClient {
   }) async {
     await _client.from(table).insert(data);
   }
+
+  @override
+  Future<List<dynamic>> select({
+    required String table,
+    required String columns,
+    required String orderBy,
+  }) async {
+    final data = await _client.from(table).select(columns).order(orderBy);
+    return data;
+  }
+
+  @override
+  String getPublicUrl({
+    required String bucket,
+    required String path,
+  }) {
+    return _client.storage.from(bucket).getPublicUrl(path);
+  }
 }

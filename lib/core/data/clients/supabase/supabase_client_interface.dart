@@ -23,4 +23,15 @@ abstract class ISupabaseClient {
     required String table,
     required Map<String, dynamic> data,
   });
+
+  Future<List<dynamic>> select({
+    required String table,
+    required String columns,
+    required String orderBy,
+  });
+
+  String getPublicUrl({
+    required String bucket,
+    required String path,
+  });
 }
