@@ -18,6 +18,11 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
   );
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -28,9 +33,12 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
     return Scaffold(
       body: GoogleMap(
         initialCameraPosition: _initialCameraPosition,
-        onMapCreated: (controller) =>
-            _controller.googleMapController.complete(controller),
+        onMapCreated: (controller) {
+          _controller.googleMapController.complete(controller);
+          _controller.startLocationUpdates(() => setState(() {}));
+        },
         mapType: MapType.normal,
+        markers: _controller.markers,
         myLocationEnabled: true,
         myLocationButtonEnabled: false,
         zoomControlsEnabled: false,

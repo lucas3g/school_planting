@@ -67,20 +67,52 @@ class MapPlantingController {
     //   AppGlobal.instance.user!.imageUrl.value,
     // );
 
-    _positionStream =
-        Geolocator.getPositionStream(
-          locationSettings: const LocationSettings(
-            accuracy: LocationAccuracy.high,
-            distanceFilter: 10,
+    final Position current = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    final LatLng pos = LatLng(current.latitude, current.longitude);
+
+    markers
+      ..clear()
+      ..add(
+        Marker(
+          markerId: const MarkerId('current_position'),
+          position: pos,
+        ),
+      );
+
+    final controller = await googleMapController.future;
+    controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(target: pos, zoom: 18),
+      ),
+    );
+
+    onUpdated();
+
+    _positionStream = Geolocator.getPositionStream(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.best,
+        distanceFilter: 0,
+      ),
+    ).listen((Position position) async {
+      final LatLng pos = LatLng(position.latitude, position.longitude);
+
+      markers
+        ..clear()
+        ..add(
+          Marker(
+            markerId: const MarkerId('current_position'),
+            position: pos,
           ),
-        ).listen((Position position) async {
-          final LatLng pos = LatLng(position.latitude, position.longitude);
+        );
 
-          final controller = await googleMapController.future;
-          controller.animateCamera(CameraUpdate.newLatLng(pos));
+      final controller = await googleMapController.future;
+      controller.animateCamera(CameraUpdate.newLatLng(pos));
 
-          onUpdated(); // Notifica a View para atualizar
-        });
+      onUpdated(); // Notifica a View para atualizar
+    });
   }
 
   void dispose() {
