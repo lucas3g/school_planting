@@ -13,6 +13,14 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:shared_preferences/shared_preferences.dart' as _i460;
 
+import '../../modules/auth/data/datasources/auth_datasource.dart' as _i655;
+import '../../modules/auth/data/datasources/auth_datasource_impl.dart' as _i275;
+import '../../modules/auth/data/repositories/auth_repository_impl.dart'
+    as _i817;
+import '../../modules/auth/domain/repositories/auth_repository.dart' as _i779;
+import '../../modules/auth/domain/usecases/login_with_google_account.dart'
+    as _i854;
+import '../../modules/auth/presentation/controller/auth_bloc.dart' as _i311;
 import '../data/clients/shared_preferences/local_storage_interface.dart'
     as _i824;
 import '../data/clients/shared_preferences/shared_preferences_service.dart'
@@ -32,6 +40,22 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
     );
     gh.factory<_i824.ILocalStorage>(() => _i755.SharedPreferencesService());
+    gh.factory<_i655.AuthDatasource>(() => _i275.AuthDatasourceImpl());
+    gh.factory<_i779.AuthRepository>(
+      () =>
+          _i817.AuthRepositoryImpl(authDatasource: gh<_i655.AuthDatasource>()),
+    );
+    gh.factory<_i854.LoginWithGoogleAccountUseCase>(
+      () => _i854.LoginWithGoogleAccountUseCase(
+        authRepository: gh<_i779.AuthRepository>(),
+      ),
+    );
+    gh.factory<_i311.AuthBloc>(
+      () => _i311.AuthBloc(
+        loginWithGoogleAccountUseCase:
+            gh<_i854.LoginWithGoogleAccountUseCase>(),
+      ),
+    );
     return this;
   }
 }

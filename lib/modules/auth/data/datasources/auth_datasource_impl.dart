@@ -1,17 +1,27 @@
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
+import 'package:injectable/injectable.dart';
 import 'package:school_planting/core/constants/constants.dart';
 import 'package:school_planting/modules/auth/data/adapters/user_adapter.dart';
 import 'package:school_planting/modules/auth/data/datasources/auth_datasource.dart';
 import 'package:school_planting/modules/auth/domain/entities/user_entity.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+@Injectable(as: AuthDatasource)
 class AuthDatasourceImpl implements AuthDatasource {
   @override
   Future<UserEntity> loginWithGoogleAccount() async {
     try {
-      await GoogleSignInPlatform.instance.init(
-        InitParameters(clientId: ANDROID_ID_GOOGLE_ACCOUNT),
-      );
+      await GoogleSignInPlatform.instance
+          .init(
+            InitParameters(
+              clientId: ANDROID_ID_GOOGLE_ACCOUNT,
+              serverClientId: WEB_APPLICATION_CLIENT_ID,
+            ),
+          )
+          .catchError(
+            (error) =>
+                throw Exception('Erro ao inicializar o Google Sign-In: $error'),
+          );
 
       final googleUser = await GoogleSignInPlatform.instance
           .attemptLightweightAuthentication(

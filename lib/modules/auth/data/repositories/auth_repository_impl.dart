@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:injectable/injectable.dart';
 import 'package:school_planting/core/domain/entities/either_of.dart';
 import 'package:school_planting/core/domain/entities/failure.dart';
 import 'package:school_planting/modules/auth/data/datasources/auth_datasource.dart';
@@ -7,6 +8,7 @@ import 'package:school_planting/modules/auth/domain/entities/auth_exception.dart
 import 'package:school_planting/modules/auth/domain/entities/user_entity.dart';
 import 'package:school_planting/modules/auth/domain/repositories/auth_repository.dart';
 
+@Injectable(as: AuthRepository)
 class AuthRepositoryImpl implements AuthRepository {
   final AuthDatasource _authDatasource;
 

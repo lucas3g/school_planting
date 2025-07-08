@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:school_planting/core/di/dependency_injection.config.dart';
+import 'package:school_planting/core/domain/entities/app_global.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final GetIt getIt = GetIt.instance;
@@ -13,6 +14,8 @@ final GetIt getIt = GetIt.instance;
   asExtension: true,
 )
 Future<void> configureDependencies() async {
+  _initAppGlobal();
+
   await getIt.init();
 }
 
@@ -20,4 +23,8 @@ Future<void> configureDependencies() async {
 abstract class RegisterModule {
   @preResolve
   Future<SharedPreferences> get prefs => SharedPreferences.getInstance();
+}
+
+void _initAppGlobal() {
+  AppGlobal(user: null);
 }

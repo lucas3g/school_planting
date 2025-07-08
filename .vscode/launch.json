@@ -7,7 +7,7 @@
             "type": "dart",
             "toolArgs": [
                 "--dart-define-from-file",
-                "SUPABASE.env",
+                "dev.env",
             ],
             "env": {
               "FLUTTER_ROOT": "${workspaceFolder}/.fvm/flutter_sdk"
@@ -22,7 +22,7 @@
           //   ],
             "toolArgs": [
                 "--dart-define-from-file",
-                "SUPABASE.env",
+                "dev.env",
             ],
             "env": {
               "FLUTTER_ROOT": "${workspaceFolder}/.fvm/flutter_sdk"
