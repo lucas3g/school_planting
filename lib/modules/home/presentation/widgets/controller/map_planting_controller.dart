@@ -142,8 +142,9 @@ class MapPlantingController {
   Future<void> moveCameraToCurrentLocation({double zoom = 18}) async {
     final permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever)
+        permission == LocationPermission.deniedForever) {
       return;
+    }
 
     final Position current = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
