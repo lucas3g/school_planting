@@ -6,21 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:school_planting/modules/home/domain/entities/planting_detail_entity.dart';
 
-class PlantingDetail {
-  final String description;
-  final String imageUrl;
-  final String userName;
-  final String userImageUrl;
-
-  PlantingDetail({
-    required this.description,
-    required this.imageUrl,
-    required this.userName,
-    required this.userImageUrl,
-  });
-}
 
 class MapPlantingController {
   final Set<Marker> markers = {};
@@ -176,42 +163,24 @@ class MapPlantingController {
         });
   }
 
-  Future<void> loadPlantings(
+  Future<void> addPlantings(
+    List<PlantingDetailEntity> plantings,
     VoidCallback onUpdated,
-    void Function(PlantingDetail) onTap,
+    void Function(PlantingDetailEntity) onTap,
   ) async {
-    final List<dynamic> data = await Supabase.instance.client
-        .from('user_plantings')
-        .select(
-            'description,image_url,lat,long,user_name,user_image_url')
-        .order('created_at');
-
-    for (final item in data) {
-      final double lat = (item['lat'] as num).toDouble();
-      final double long = (item['long'] as num).toDouble();
-      final String imageName = item['image_url'] as String;
-      final String url = Supabase.instance.client.storage
-          .from('escolaverdebucket')
-          .getPublicUrl('private/$imageName');
-
-      final BitmapDescriptor icon = await _getCircularAvatarMarkerIcon(url);
-
-      final detail = PlantingDetail(
-        description: item['description'] as String? ?? '',
-        imageUrl: url,
-        userName: item['user_name'] as String? ?? '',
-        userImageUrl: item['user_image_url'] as String? ?? '',
-      );
+    for (final item in plantings) {
+      final BitmapDescriptor icon =
+          await _getCircularAvatarMarkerIcon(item.imageUrl);
 
       markers.add(
         Marker(
-          markerId: MarkerId(imageName),
-          position: LatLng(lat, long),
+          markerId: MarkerId(item.imageUrl),
+          position: LatLng(item.latitude, item.longitude),
           icon: icon,
           infoWindow: InfoWindow(
-            title: detail.userName,
-            snippet: detail.description,
-            onTap: () => onTap(detail),
+            title: item.userName,
+            snippet: item.description,
+            onTap: () => onTap(item),
           ),
         ),
       );
