@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -6,8 +8,11 @@ import 'supabase_client_interface.dart';
 @Singleton(as: ISupabaseClient)
 class SupabaseClientImpl implements ISupabaseClient {
   final GoTrueClient _auth;
+  final SupabaseClient _client;
 
-  SupabaseClientImpl() : _auth = Supabase.instance.client.auth;
+  SupabaseClientImpl()
+      : _client = Supabase.instance.client,
+        _auth = Supabase.instance.client.auth;
 
   @override
   Future<AuthResponse> signInWithIdToken({
@@ -27,4 +32,21 @@ class SupabaseClientImpl implements ISupabaseClient {
 
   @override
   Future<void> signOut() => _auth.signOut();
+
+  @override
+  Future<void> uploadFile({
+    required String bucket,
+    required String path,
+    required File file,
+  }) async {
+    await _client.storage.from(bucket).upload(path, file);
+  }
+
+  @override
+  Future<void> insert({
+    required String table,
+    required Map<String, dynamic> data,
+  }) async {
+    await _client.from(table).insert(data);
+  }
 }

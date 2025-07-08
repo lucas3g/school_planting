@@ -1,3 +1,5 @@
+import "dart:io";
+
 import "package:supabase_flutter/supabase_flutter.dart";
 
 abstract class ISupabaseClient {
@@ -10,4 +12,15 @@ abstract class ISupabaseClient {
   User? get currentUser;
 
   Future<void> signOut();
+
+  Future<void> uploadFile({
+    required String bucket,
+    required String path,
+    required File file,
+  });
+
+  Future<void> insert({
+    required String table,
+    required Map<String, dynamic> data,
+  });
 }
