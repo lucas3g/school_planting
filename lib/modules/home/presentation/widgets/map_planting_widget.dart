@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:school_planting/modules/home/data/datasources/map_planting_datasource_impl.dart';
+import 'package:school_planting/modules/home/data/repositories/map_planting_repository_impl.dart';
+import 'package:school_planting/modules/home/domain/usecases/get_plantings_usecase.dart';
+import 'package:school_planting/modules/home/domain/entities/planting_detail_entity.dart';
+import 'package:school_planting/modules/home/presentation/controller/plantings_bloc.dart';
+import 'package:school_planting/modules/home/presentation/controller/plantings_events.dart';
+import 'package:school_planting/modules/home/presentation/controller/plantings_states.dart';
 import 'package:school_planting/modules/home/presentation/widgets/controller/map_planting_controller.dart';
 
 class MapPlantingWidget extends StatefulWidget {
@@ -11,6 +19,7 @@ class MapPlantingWidget extends StatefulWidget {
 
 class _MapPlantingWidgetState extends State<MapPlantingWidget> {
   final MapPlantingController _controller = MapPlantingController();
+  late final PlantingsBloc _bloc;
 
   static const CameraPosition _initialCameraPosition = CameraPosition(
     target: LatLng(-15.7942, -47.8822),
@@ -20,11 +29,19 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
   @override
   void initState() {
     super.initState();
+    _bloc = PlantingsBloc(
+      usecase: GetPlantingsUseCase(
+        repository: MapPlantingRepositoryImpl(
+          datasource: MapPlantingDatasourceImpl(),
+        ),
+      ),
+    );
+
     _controller.startLocationUpdates(() => setState(() {}));
-    _controller.loadPlantings(() => setState(() {}), _showDetail);
+    _bloc.add(LoadPlantingsEvent());
   }
 
-  void _showDetail(PlantingDetail detail) {
+  void _showDetail(PlantingDetailEntity detail) {
     showModalBottomSheet(
       context: context,
       builder: (_) {
@@ -70,30 +87,45 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
   @override
   void dispose() {
     _controller.dispose();
+    _bloc.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: GoogleMap(
-        initialCameraPosition: _initialCameraPosition,
-        onMapCreated: (controller) {
-          _controller.googleMapController.complete(controller);
-          _controller.moveCameraToCurrentLocation();
+    return BlocProvider.value(
+      value: _bloc,
+      child: BlocListener<PlantingsBloc, PlantingsStates>(
+        listener: (context, state) {
+          if (state is PlantingsSuccessState) {
+            _controller.addPlantings(
+              state.plantings,
+              () => setState(() {}),
+              _showDetail,
+            );
+          }
         },
-        mapType: MapType.normal,
-        markers: _controller.markers,
-        myLocationEnabled: true,
-        myLocationButtonEnabled: false,
-        zoomControlsEnabled: false,
-        trafficEnabled: true,
-        buildingsEnabled: true,
-        compassEnabled: true,
-        scrollGesturesEnabled: true,
-        zoomGesturesEnabled: true,
-        tiltGesturesEnabled: true,
-        rotateGesturesEnabled: true,
+        child: Scaffold(
+          body: GoogleMap(
+            initialCameraPosition: _initialCameraPosition,
+            onMapCreated: (controller) {
+              _controller.googleMapController.complete(controller);
+              _controller.moveCameraToCurrentLocation();
+            },
+            mapType: MapType.normal,
+            markers: _controller.markers,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: false,
+            zoomControlsEnabled: false,
+            trafficEnabled: true,
+            buildingsEnabled: true,
+            compassEnabled: true,
+            scrollGesturesEnabled: true,
+            zoomGesturesEnabled: true,
+            tiltGesturesEnabled: true,
+            rotateGesturesEnabled: true,
+          ),
+        ),
       ),
     );
   }
