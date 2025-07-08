@@ -15,7 +15,7 @@ class MapPlantingController {
 
   Future<BitmapDescriptor> _getCircularAvatarMarkerIcon(
     String imageUrl, {
-    int size = 80,
+    int size = 40,
   }) async {
     final HttpClient httpClient = HttpClient();
     final HttpClientRequest request = await httpClient.getUrl(
@@ -122,29 +122,29 @@ class MapPlantingController {
         item.imageUrl,
       );
 
-        markers.add(
-          Marker(
-            markerId: MarkerId(item.imageUrl),
-            position: LatLng(item.latitude, item.longitude),
-            icon: icon,
-            onTap: () async {
-              final controller = await googleMapController.future;
-              controller.animateCamera(
-                CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    target: LatLng(item.latitude, item.longitude),
-                    zoom: 18,
-                  ),
+      markers.add(
+        Marker(
+          markerId: MarkerId(item.imageUrl),
+          position: LatLng(item.latitude, item.longitude),
+          icon: icon,
+          onTap: () async {
+            final controller = await googleMapController.future;
+            controller.animateCamera(
+              CameraUpdate.newCameraPosition(
+                CameraPosition(
+                  target: LatLng(item.latitude, item.longitude),
+                  zoom: 18,
                 ),
-              );
-              onTap(item);
-            },
-            infoWindow: InfoWindow(
-              title: item.userName,
-              snippet: item.description,
-            ),
+              ),
+            );
+            onTap(item);
+          },
+          infoWindow: InfoWindow(
+            title: item.userName,
+            snippet: item.description,
           ),
-        );
+        ),
+      );
     }
 
     onUpdated();

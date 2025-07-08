@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:school_planting/core/constants/constants.dart';
 import 'package:school_planting/core/di/dependency_injection.dart';
+import 'package:school_planting/core/domain/entities/named_routes.dart';
 import 'package:school_planting/modules/home/domain/entities/planting_detail_entity.dart';
 import 'package:school_planting/modules/home/presentation/controller/plantings_bloc.dart';
 import 'package:school_planting/modules/home/presentation/controller/plantings_events.dart';
 import 'package:school_planting/modules/home/presentation/controller/plantings_states.dart';
 import 'package:school_planting/modules/home/presentation/widgets/controller/map_planting_controller.dart';
+import 'package:school_planting/shared/themes/app_theme_constants.dart';
 
 class MapPlantingWidget extends StatefulWidget {
   const MapPlantingWidget({super.key});
@@ -17,7 +20,7 @@ class MapPlantingWidget extends StatefulWidget {
 
 class _MapPlantingWidgetState extends State<MapPlantingWidget> {
   final MapPlantingController _controller = MapPlantingController();
-  final PlantingsBloc _bloc = getIt<PlantingsBloc>();
+  final PlantingsBloc _platingBloc = getIt<PlantingsBloc>();
 
   static const CameraPosition _initialCameraPosition = CameraPosition(
     target: LatLng(-15.7942, -47.8822),
@@ -29,7 +32,7 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
     super.initState();
 
     _controller.startLocationUpdates(() => setState(() {}));
-    _bloc.add(LoadPlantingsEvent());
+    _platingBloc.add(LoadPlantingsEvent());
   }
 
   void _showDetail(PlantingDetailEntity detail) {
@@ -78,14 +81,14 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
   @override
   void dispose() {
     _controller.dispose();
-    _bloc.close();
+    _platingBloc.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: _bloc,
+      value: _platingBloc,
       child: BlocListener<PlantingsBloc, PlantingsStates>(
         listener: (context, state) {
           if (state is PlantingsSuccessState) {
@@ -115,6 +118,35 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
             zoomGesturesEnabled: true,
             tiltGesturesEnabled: true,
             rotateGesturesEnabled: true,
+          ),
+          floatingActionButton: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                  AppThemeConstants.largeBorderRadius,
+                ),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            ),
+            onPressed: () async {
+              await Navigator.pushNamed(context, NamedRoutes.planting.route);
+
+              _platingBloc.add(LoadPlantingsEvent());
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.park_rounded, color: Colors.white),
+                const SizedBox(width: 5),
+                Text(
+                  'Plantar',
+                  style: context.textTheme.bodyLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
