@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:school_planting/modules/home/data/datasources/map_planting_datasource_impl.dart';
-import 'package:school_planting/modules/home/data/repositories/map_planting_repository_impl.dart';
-import 'package:school_planting/modules/home/domain/usecases/get_plantings_usecase.dart';
+import 'package:school_planting/core/di/dependency_injection.dart';
 import 'package:school_planting/modules/home/domain/entities/planting_detail_entity.dart';
 import 'package:school_planting/modules/home/presentation/controller/plantings_bloc.dart';
 import 'package:school_planting/modules/home/presentation/controller/plantings_events.dart';
@@ -19,7 +17,7 @@ class MapPlantingWidget extends StatefulWidget {
 
 class _MapPlantingWidgetState extends State<MapPlantingWidget> {
   final MapPlantingController _controller = MapPlantingController();
-  late final PlantingsBloc _bloc;
+  final PlantingsBloc _bloc = getIt<PlantingsBloc>();
 
   static const CameraPosition _initialCameraPosition = CameraPosition(
     target: LatLng(-15.7942, -47.8822),
@@ -29,13 +27,6 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
   @override
   void initState() {
     super.initState();
-    _bloc = PlantingsBloc(
-      usecase: GetPlantingsUseCase(
-        repository: MapPlantingRepositoryImpl(
-          datasource: MapPlantingDatasourceImpl(),
-        ),
-      ),
-    );
 
     _controller.startLocationUpdates(() => setState(() {}));
     _bloc.add(LoadPlantingsEvent());

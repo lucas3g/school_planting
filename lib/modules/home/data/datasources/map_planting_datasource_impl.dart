@@ -1,14 +1,16 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'map_planting_datasource.dart';
+import 'package:injectable/injectable.dart';
 import 'package:school_planting/modules/home/domain/entities/planting_detail_entity.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'map_planting_datasource.dart';
+
+@Injectable(as: MapPlantingDatasource)
 class MapPlantingDatasourceImpl implements MapPlantingDatasource {
   @override
   Future<List<PlantingDetailEntity>> fetchPlantings() async {
     final List<dynamic> data = await Supabase.instance.client
         .from('user_plantings')
-        .select(
-            'description,image_url,lat,long,user_name,user_image_url')
+        .select('description,image_url,lat,long,user_name,user_image_url')
         .order('created_at');
 
     final List<PlantingDetailEntity> result = [];

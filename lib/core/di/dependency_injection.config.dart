@@ -24,6 +24,17 @@ import '../../modules/auth/domain/usecases/login_with_google_account.dart'
     as _i854;
 import '../../modules/auth/domain/usecases/logout_account.dart' as _i720;
 import '../../modules/auth/presentation/controller/auth_bloc.dart' as _i311;
+import '../../modules/home/data/datasources/map_planting_datasource.dart'
+    as _i711;
+import '../../modules/home/data/datasources/map_planting_datasource_impl.dart'
+    as _i1020;
+import '../../modules/home/data/repositories/map_planting_repository_impl.dart'
+    as _i792;
+import '../../modules/home/domain/repositories/map_planting_repository.dart'
+    as _i56;
+import '../../modules/home/domain/usecases/get_plantings_usecase.dart' as _i655;
+import '../../modules/home/presentation/controller/plantings_bloc.dart'
+    as _i182;
 import '../../modules/planting/data/datasources/planting_datasource.dart'
     as _i155;
 import '../../modules/planting/data/datasources/planting_datasource_impl.dart'
@@ -60,6 +71,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i361.Dio>(() => registerModule.dio);
     gh.factory<_i824.ILocalStorage>(() => _i755.SharedPreferencesService());
+    gh.factory<_i711.MapPlantingDatasource>(
+      () => _i1020.MapPlantingDatasourceImpl(),
+    );
     gh.singleton<_i86.ISupabaseClient>(() => _i788.SupabaseClientImpl());
     gh.factory<_i155.PlantingDatasource>(
       () => _i64.PlantingDatasourceImpl(
@@ -73,9 +87,22 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i275.AuthDatasourceImpl(supabaseClient: gh<_i86.ISupabaseClient>()),
     );
+    gh.factory<_i56.MapPlantingRepository>(
+      () => _i792.MapPlantingRepositoryImpl(
+        datasource: gh<_i711.MapPlantingDatasource>(),
+      ),
+    );
     gh.factory<_i779.AuthRepository>(
       () =>
           _i817.AuthRepositoryImpl(authDatasource: gh<_i655.AuthDatasource>()),
+    );
+    gh.factory<_i655.GetPlantingsUseCase>(
+      () => _i655.GetPlantingsUseCase(
+        repository: gh<_i56.MapPlantingRepository>(),
+      ),
+    );
+    gh.factory<_i182.PlantingsBloc>(
+      () => _i182.PlantingsBloc(usecase: gh<_i655.GetPlantingsUseCase>()),
     );
     gh.factory<_i91.PlantingRepository>(
       () => _i631.PlantingRepositoryImpl(
