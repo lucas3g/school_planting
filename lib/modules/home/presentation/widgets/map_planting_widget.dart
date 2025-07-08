@@ -33,10 +33,10 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
     return Scaffold(
       body: GoogleMap(
         initialCameraPosition: _initialCameraPosition,
-        // onMapCreated: (controller) {
-        //   _controller.googleMapController.complete(controller);
-        //   _controller.startLocationUpdates(() => setState(() {}));
-        // },
+        onMapCreated: (controller) {
+          _controller.googleMapController.complete(controller);
+          _controller.moveCameraToCurrentLocation();
+        },
         mapType: MapType.normal,
         markers: _controller.markers,
         myLocationEnabled: true,
