@@ -30,6 +30,8 @@ import '../data/clients/shared_preferences/local_storage_interface.dart'
     as _i824;
 import '../data/clients/shared_preferences/shared_preferences_service.dart'
     as _i755;
+import '../data/clients/supabase/supabase_client_interface.dart' as _i900;
+import '../data/clients/supabase/supabase_client_impl.dart' as _i901;
 import 'dependency_injection.dart' as _i9;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -46,10 +48,14 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i361.Dio>(() => registerModule.dio);
     gh.factory<_i824.ILocalStorage>(() => _i755.SharedPreferencesService());
-    gh.factory<_i655.AuthDatasource>(() => _i275.AuthDatasourceImpl());
+    gh.factory<_i655.AuthDatasource>(
+        () => _i275.AuthDatasourceImpl(
+              supabaseClient: gh<_i900.ISupabaseClient>(),
+            ));
     gh.singleton<_i777.ClientHttp>(
       () => _i14.DioClientHttpImpl(dio: gh<_i361.Dio>()),
     );
+    gh.singleton<_i900.ISupabaseClient>(() => _i901.SupabaseClientImpl());
     gh.factory<_i779.AuthRepository>(
       () =>
           _i817.AuthRepositoryImpl(authDatasource: gh<_i655.AuthDatasource>()),
