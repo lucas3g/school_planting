@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:school_planting/core/constants/constants.dart';
@@ -45,7 +46,7 @@ class _PlantingPageState extends State<PlantingPage> {
     }
   }
 
-  void _save() {
+  Future<void> _save() async {
     if (_image == null) {
       showAppSnackbar(
         context,
@@ -56,12 +57,30 @@ class _PlantingPageState extends State<PlantingPage> {
       return;
     }
 
+    final permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      showAppSnackbar(
+        context,
+        title: 'Erro',
+        message: 'Permita acesso à localização',
+        type: TypeSnack.error,
+      );
+      return;
+    }
+
+    final position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
     final String uuid = const Uuid().v4();
 
     final entity = PlantingEntity(
       description: _descController.text,
       imageName: uuid,
       userId: AppGlobal.instance.user!.id.value,
+      latitude: position.latitude,
+      longitude: position.longitude,
     );
 
     _bloc.add(CreatePlantingEvent(entity: entity, image: _image!));
@@ -139,7 +158,7 @@ class _PlantingPageState extends State<PlantingPage> {
                 builder: (context, state) {
                   return AppCustomButton(
                     expands: true,
-                    onPressed: _save,
+                    onPressed: () => _save(),
                     label: _handleButtonState(state),
                   );
                 },
