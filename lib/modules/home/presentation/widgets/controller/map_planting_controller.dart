@@ -74,12 +74,6 @@ class MapPlantingController {
 
     final LatLng pos = LatLng(current.latitude, current.longitude);
 
-    markers
-      ..clear()
-      ..add(
-        Marker(markerId: const MarkerId('current_position'), position: pos),
-      );
-
     final controller = await googleMapController.future;
     controller.animateCamera(
       CameraUpdate.newCameraPosition(CameraPosition(target: pos, zoom: 18)),
@@ -95,15 +89,6 @@ class MapPlantingController {
           ),
         ).listen((Position position) async {
           final LatLng pos = LatLng(position.latitude, position.longitude);
-
-          markers
-            ..clear()
-            ..add(
-              Marker(
-                markerId: const MarkerId('current_position'),
-                position: pos,
-              ),
-            );
 
           final controller = await googleMapController.future;
           controller.animateCamera(CameraUpdate.newLatLng(pos));

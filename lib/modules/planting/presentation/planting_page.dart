@@ -49,16 +49,19 @@ class _PlantingPageState extends State<PlantingPage> {
     if (_image == null) {
       showAppSnackbar(
         context,
-        title: 'Erro',
+        title: 'Atenção',
         message: 'Tire uma foto da planta',
-        type: TypeSnack.error,
+        type: TypeSnack.warning,
       );
+
       return;
     }
 
     final permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied ||
         permission == LocationPermission.deniedForever) {
+      if (!mounted) return;
+
       showAppSnackbar(
         context,
         title: 'Erro',
@@ -129,12 +132,15 @@ class _PlantingPageState extends State<PlantingPage> {
                 borderColor: Colors.white,
                 controller: _descController,
                 hint: 'Descrição da planta',
+                textArea: true,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
+              Divider(),
+              const SizedBox(height: 10),
               GestureDetector(
                 onTap: _takePhoto,
                 child: Container(
-                  height: 200,
+                  height: context.screenHeight * .3,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.grey.shade300,
@@ -157,6 +163,7 @@ class _PlantingPageState extends State<PlantingPage> {
                 ),
               ),
               const Spacer(),
+              Divider(),
               BlocBuilder<PlantingBloc, PlantingStates>(
                 bloc: _bloc,
                 builder: (context, state) {

@@ -73,6 +73,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       obscureText: _hideInput,
       controller: widget.controller,
       cursorColor: widget.borderColor ?? context.myTheme.surface,
+      maxLines: widget.textArea ? null : 1,
       style: context.textTheme.bodyLarge?.copyWith(
         color: widget.borderColor ?? context.myTheme.surface,
         decorationColor: Colors.transparent,

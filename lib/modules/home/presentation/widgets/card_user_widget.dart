@@ -38,7 +38,7 @@ class _CardUserWidgetState extends State<CardUserWidget> {
     }
 
     return IconButton(
-      icon: const Icon(Icons.logout),
+      icon: const Icon(Icons.logout, color: Colors.white),
       onPressed: () {
         _authBloc.add(LogoutAccountEvent());
       },
@@ -85,41 +85,45 @@ class _CardUserWidgetState extends State<CardUserWidget> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Container(
-        margin: const EdgeInsets.symmetric(
-          horizontal: AppThemeConstants.mediumPadding,
-        ),
-        padding: const EdgeInsets.all(AppThemeConstants.mediumPadding),
-        decoration: BoxDecoration(
-          color: context.myTheme.onPrimary,
-          borderRadius: BorderRadius.circular(
-            AppThemeConstants.largeBorderRadius,
+      child: Padding(
+        padding: const EdgeInsets.only(top: AppThemeConstants.mediumPadding),
+        child: Container(
+          margin: const EdgeInsets.symmetric(
+            horizontal: AppThemeConstants.mediumPadding,
           ),
-        ),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 25,
-              backgroundImage: NetworkImage(
-                AppGlobal.instance.user!.imageUrl.value,
-              ),
+          padding: const EdgeInsets.all(AppThemeConstants.mediumPadding),
+          decoration: BoxDecoration(
+            color: context.myTheme.primaryContainer,
+            borderRadius: BorderRadius.circular(
+              AppThemeConstants.largeBorderRadius,
             ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                AppGlobal.instance.user!.name.value,
-                style: context.textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
+          ),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 25,
+                backgroundImage: NetworkImage(
+                  AppGlobal.instance.user!.imageUrl.value,
                 ),
               ),
-            ),
-            BlocBuilder<AuthBloc, AuthStates>(
-              bloc: _authBloc,
-              builder: (context, states) {
-                return _handleButtonLogout(states);
-              },
-            ),
-          ],
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  AppGlobal.instance.user!.name.value,
+                  style: context.textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              BlocBuilder<AuthBloc, AuthStates>(
+                bloc: _authBloc,
+                builder: (context, states) {
+                  return _handleButtonLogout(states);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

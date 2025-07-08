@@ -34,7 +34,7 @@ final darkThemeApp = ThemeData(
   fontFamily: GoogleFonts.roboto().fontFamily,
   colorScheme: darkColorSchemePapagaio,
   appBarTheme: AppBarTheme(
-    backgroundColor: darkColorSchemePapagaio.onPrimary,
+    backgroundColor: darkColorSchemePapagaio.primaryContainer,
     centerTitle: true,
   ),
   dialogTheme: const DialogThemeData(
@@ -48,7 +48,7 @@ final darkThemeApp = ThemeData(
         (states) => darkColorSchemePapagaio.onSurface,
       ),
       backgroundColor: WidgetStateProperty.resolveWith(
-        (states) => darkColorSchemePapagaio.onPrimary,
+        (states) => darkColorSchemePapagaio.primaryContainer,
       ),
     ),
   ),
