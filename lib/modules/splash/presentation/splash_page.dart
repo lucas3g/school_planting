@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_planting/core/domain/entities/app_global.dart';
 import 'package:school_planting/core/domain/entities/named_routes.dart';
 
 class SplashPage extends StatefulWidget {
@@ -9,12 +10,22 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  bool userLoggedLicenseActiveHasIpServer() {
+    final AppGlobal appGlobal = AppGlobal.instance;
+
+    return appGlobal.user != null;
+  }
+
   Future<void> _init() async {
     await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
 
-    Navigator.pushReplacementNamed(context, NamedRoutes.auth.route);
+    if (userLoggedLicenseActiveHasIpServer()) {
+      Navigator.pushReplacementNamed(context, NamedRoutes.home.route);
+    } else {
+      Navigator.pushReplacementNamed(context, NamedRoutes.auth.route);
+    }
   }
 
   @override
@@ -26,6 +37,20 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(height: 20),
+            Text(
+              'School Planting',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

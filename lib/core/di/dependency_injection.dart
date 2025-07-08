@@ -4,6 +4,8 @@ import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:school_planting/core/di/dependency_injection.config.dart';
 import 'package:school_planting/core/domain/entities/app_global.dart';
+import 'package:school_planting/core/domain/entities/usecase.dart';
+import 'package:school_planting/modules/auth/domain/usecases/auto_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final GetIt getIt = GetIt.instance;
@@ -17,6 +19,8 @@ Future<void> configureDependencies() async {
   _initAppGlobal();
 
   await getIt.init();
+
+  await _tryAutoLogin();
 }
 
 @module
@@ -27,4 +31,10 @@ abstract class RegisterModule {
 
 void _initAppGlobal() {
   AppGlobal(user: null);
+}
+
+Future<void> _tryAutoLogin() async {
+  final AutoLoginUseCase autoLoginUsecase = getIt<AutoLoginUseCase>();
+
+  await autoLoginUsecase(const NoArgs());
 }

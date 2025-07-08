@@ -18,6 +18,7 @@ import '../../modules/auth/data/datasources/auth_datasource_impl.dart' as _i275;
 import '../../modules/auth/data/repositories/auth_repository_impl.dart'
     as _i817;
 import '../../modules/auth/domain/repositories/auth_repository.dart' as _i779;
+import '../../modules/auth/domain/usecases/auto_login.dart' as _i51;
 import '../../modules/auth/domain/usecases/login_with_google_account.dart'
     as _i854;
 import '../../modules/auth/presentation/controller/auth_bloc.dart' as _i311;
@@ -44,6 +45,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i779.AuthRepository>(
       () =>
           _i817.AuthRepositoryImpl(authDatasource: gh<_i655.AuthDatasource>()),
+    );
+    gh.factory<_i51.AutoLoginUseCase>(
+      () => _i51.AutoLoginUseCase(authRepository: gh<_i779.AuthRepository>()),
     );
     gh.factory<_i854.LoginWithGoogleAccountUseCase>(
       () => _i854.LoginWithGoogleAccountUseCase(

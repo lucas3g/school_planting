@@ -1,6 +1,8 @@
-import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
+import 'dart:async';
+
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
-import 'package:school_planting/core/constants/constants.dart';
+import 'package:school_planting/core/domain/entities/app_global.dart';
 import 'package:school_planting/modules/auth/data/adapters/user_adapter.dart';
 import 'package:school_planting/modules/auth/data/datasources/auth_datasource.dart';
 import 'package:school_planting/modules/auth/domain/entities/user_entity.dart';
@@ -11,58 +13,27 @@ class AuthDatasourceImpl implements AuthDatasource {
   @override
   Future<UserEntity> loginWithGoogleAccount() async {
     try {
-      await GoogleSignInPlatform.instance
-          .init(
-            InitParameters(
-              clientId: ANDROID_ID_GOOGLE_ACCOUNT,
-              serverClientId: WEB_APPLICATION_CLIENT_ID,
-            ),
-          )
-          .catchError(
-            (error) =>
-                throw Exception('Erro ao inicializar o Google Sign-In: $error'),
-          );
+      final GoogleSignIn signIn = GoogleSignIn.instance;
 
-      final googleUser = await GoogleSignInPlatform.instance
-          .attemptLightweightAuthentication(
-            const AttemptLightweightAuthenticationParameters(),
-          );
+      await signIn.initialize();
 
-      if (googleUser == null) {
-        throw Exception('Google sign-in failed');
-      }
+      final GoogleSignInAccount googleUser = await signIn.authenticate();
 
       const List<String> scopes = <String>[
         'https://www.googleapis.com/auth/contacts.readonly',
       ];
 
-      final ClientAuthorizationTokenData? tokens = await GoogleSignInPlatform
-          .instance
-          .clientAuthorizationTokensForScopes(
-            ClientAuthorizationTokensForScopesParameters(
-              request: AuthorizationRequestDetails(
-                scopes: scopes,
-                userId: googleUser.user.id,
-                email: googleUser.user.email,
-                promptIfUnauthorized: true,
-              ),
-            ),
-          );
+      final GoogleSignInClientAuthorization authorization = await googleUser
+          .authorizationClient
+          .authorizeScopes(scopes);
 
-      final accessToken = tokens?.accessToken;
+      final accessToken = authorization.accessToken;
 
-      final idToken = googleUser.authenticationTokens.idToken;
-
-      if (accessToken == null) {
-        throw 'Token de acesso não encontrado.';
-      }
-      if (idToken == null) {
-        throw 'Id token não encontrado.';
-      }
+      final idToken = googleUser.authentication.idToken;
 
       final result = await Supabase.instance.client.auth.signInWithIdToken(
         provider: OAuthProvider.google,
-        idToken: idToken,
+        idToken: idToken!,
         accessToken: accessToken,
       );
 
@@ -70,9 +41,30 @@ class AuthDatasourceImpl implements AuthDatasource {
         throw 'Usuário não encontrado após autenticação com o Google.';
       }
 
-      return UserAdapter.fromSupabase(result.user!);
+      final user = UserAdapter.fromSupabase(result.user!);
+
+      AppGlobal.instance.setUser(user);
+
+      return user;
     } catch (e) {
       rethrow;
     }
+  }
+
+  @override
+  Future<UserEntity?> autoLogin() async {
+    await Supabase.instance.client.auth.signOut();
+
+    final user = Supabase.instance.client.auth.currentUser;
+
+    if (user == null) {
+      return null;
+    }
+
+    final userEntity = UserAdapter.fromSupabase(user);
+
+    AppGlobal.instance.setUser(userEntity);
+
+    return userEntity;
   }
 }

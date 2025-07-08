@@ -41,7 +41,7 @@ final darkThemeApp = ThemeData(
     backgroundColor: Colors.transparent,
     surfaceTintColor: Colors.transparent,
   ),
-  scaffoldBackgroundColor: darkColorSchemePapagaio.scrim,
+  scaffoldBackgroundColor: darkColorSchemePapagaio.surface,
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
       foregroundColor: WidgetStateProperty.resolveWith(

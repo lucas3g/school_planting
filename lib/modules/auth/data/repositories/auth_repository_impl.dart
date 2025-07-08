@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:injectable/injectable.dart';
 import 'package:school_planting/core/domain/entities/either_of.dart';
 import 'package:school_planting/core/domain/entities/failure.dart';
@@ -22,10 +20,20 @@ class AuthRepositoryImpl implements AuthRepository {
       return resolve(user);
     } on AppFailure catch (error) {
       return reject(error);
-    } on HttpException catch (error) {
-      return reject(AuthException(error.message));
     } catch (error) {
       return reject(AuthException(error.toString()));
+    }
+  }
+
+  @override
+  Future<EitherOf<AppFailure, UserEntity?>> autoLogin() async {
+    try {
+      final UserEntity? user = await _authDatasource.autoLogin();
+      return resolve(user);
+    } on AppFailure catch (error) {
+      return reject(error);
+    } catch (error) {
+      return reject(AuthException('Erro ao tentar fazer login'));
     }
   }
 }

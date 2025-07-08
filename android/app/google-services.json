@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "664527003731",
+    "project_id": "green-map-5dc67",
+    "storage_bucket": "green-map-5dc67.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:664527003731:android:c672aeb0ce4a4785fea6a6",
+        "android_client_info": {
+          "package_name": "com.maktub.greenmap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "664527003731-9h77hcpnh28qqhbt6dd01ejmd406ah7p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.maktub.greenmap",
+            "certificate_hash": "452a58f90f12986d059df1b97c2d2b7bbd3be7b9"
+          }
+        },
+        {
+          "client_id": "664527003731-8b5of2jov2k127sgiulk1abekpup8ua6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0p9-oM5_q4madir4CxdK1ealZ_AFekwo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "664527003731-8b5of2jov2k127sgiulk1abekpup8ua6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
