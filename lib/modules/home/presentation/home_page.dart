@@ -3,6 +3,7 @@ import 'package:school_planting/core/constants/constants.dart';
 import 'package:school_planting/modules/home/presentation/widgets/card_user_widget.dart';
 import 'package:school_planting/modules/home/presentation/widgets/map_planting_widget.dart';
 import 'package:school_planting/shared/themes/app_theme_constants.dart';
+import 'package:school_planting/core/domain/entities/named_routes.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,7 +26,9 @@ class _HomePageState extends State<HomePage> {
           ),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, NamedRoutes.planting.route);
+        },
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

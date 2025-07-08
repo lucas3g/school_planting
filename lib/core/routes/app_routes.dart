@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:school_planting/modules/auth/presentation/auth_page.dart';
 import 'package:school_planting/modules/home/presentation/home_page.dart';
 import 'package:school_planting/modules/splash/presentation/splash_page.dart';
+import 'package:school_planting/modules/planting/presentation/planting_page.dart';
 
 import '../domain/entities/named_routes.dart';
 import 'domain/entities/custom_transition.dart';
@@ -17,6 +18,7 @@ class CustomNavigator {
       NamedRoutes.splash.route: (BuildContext context) => const SplashPage(),
       NamedRoutes.auth.route: (BuildContext context) => const AuthPage(),
       NamedRoutes.home.route: (BuildContext context) => const HomePage(),
+      NamedRoutes.planting.route: (BuildContext context) => const PlantingPage(),
     };
 
     final WidgetBuilder? builder = appRoutes[settings.name];

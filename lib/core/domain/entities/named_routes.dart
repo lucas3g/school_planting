@@ -1,7 +1,8 @@
 enum NamedRoutes {
   splash('/'),
   auth('/auth'),
-  home('/home');
+  home('/home'),
+  planting('/planting');
 
   final String route;
   const NamedRoutes(this.route);
