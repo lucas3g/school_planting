@@ -20,6 +20,51 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
   @override
   void initState() {
     super.initState();
+    _controller.startLocationUpdates(() => setState(() {}));
+    _controller.loadPlantings(() => setState(() {}), _showDetail);
+  }
+
+  void _showDetail(PlantingDetail detail) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  detail.imageUrl,
+                  height: 180,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(detail.userImageUrl),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      detail.userName,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text(detail.description),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
