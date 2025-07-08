@@ -66,7 +66,7 @@ class _AuthPageState extends State<AuthPage> {
           child: SizedBox(
             width: context.screenWidth,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Column(
@@ -75,6 +75,7 @@ class _AuthPageState extends State<AuthPage> {
                       AppAssets.logo,
                       width: context.screenWidth * .5,
                     ),
+                    const SizedBox(height: 20),
                     Text(
                       'Marque onde você plantou uma árvore',
                       style: context.textTheme.headlineMedium?.copyWith(
@@ -98,7 +99,7 @@ class _AuthPageState extends State<AuthPage> {
                         ),
                         fixedSize: Size(context.screenWidth, 50),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                       onPressed: () {
