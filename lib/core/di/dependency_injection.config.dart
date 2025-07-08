@@ -59,13 +59,24 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
     );
     gh.factory<_i361.Dio>(() => registerModule.dio);
+    gh.factory<_i824.ILocalStorage>(() => _i755.SharedPreferencesService());
+    gh.singleton<_i86.ISupabaseClient>(() => _i788.SupabaseClientImpl());
     gh.factory<_i155.PlantingDatasource>(
       () => _i64.PlantingDatasourceImpl(
         supabaseClient: gh<_i86.ISupabaseClient>(),
       ),
     );
-    gh.factory<_i824.ILocalStorage>(() => _i755.SharedPreferencesService());
-    gh.singleton<_i86.ISupabaseClient>(() => _i788.SupabaseClientImpl());
+    gh.singleton<_i777.ClientHttp>(
+      () => _i14.DioClientHttpImpl(dio: gh<_i361.Dio>()),
+    );
+    gh.factory<_i655.AuthDatasource>(
+      () =>
+          _i275.AuthDatasourceImpl(supabaseClient: gh<_i86.ISupabaseClient>()),
+    );
+    gh.factory<_i779.AuthRepository>(
+      () =>
+          _i817.AuthRepositoryImpl(authDatasource: gh<_i655.AuthDatasource>()),
+    );
     gh.factory<_i91.PlantingRepository>(
       () => _i631.PlantingRepositoryImpl(
         datasource: gh<_i155.PlantingDatasource>(),
@@ -76,21 +87,10 @@ extension GetItInjectableX on _i174.GetIt {
         repository: gh<_i91.PlantingRepository>(),
       ),
     );
-    gh.singleton<_i777.ClientHttp>(
-      () => _i14.DioClientHttpImpl(dio: gh<_i361.Dio>()),
-    );
-    gh.factory<_i655.AuthDatasource>(
-      () =>
-          _i275.AuthDatasourceImpl(supabaseClient: gh<_i86.ISupabaseClient>()),
-    );
     gh.factory<_i97.PlantingBloc>(
       () => _i97.PlantingBloc(
         createPlantingUseCase: gh<_i1045.CreatePlantingUseCase>(),
       ),
-    );
-    gh.factory<_i779.AuthRepository>(
-      () =>
-          _i817.AuthRepositoryImpl(authDatasource: gh<_i655.AuthDatasource>()),
     );
     gh.factory<_i51.AutoLoginUseCase>(
       () => _i51.AutoLoginUseCase(authRepository: gh<_i779.AuthRepository>()),
