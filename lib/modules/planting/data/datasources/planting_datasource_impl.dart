@@ -17,6 +17,8 @@ class PlantingDatasourceImpl implements PlantingDatasource {
     required String description,
     required File image,
     required String imageName,
+    required double latitude,
+    required double longitude,
   }) async {
     await _client.storage.from('escolaverdebucket').upload(imageName, image);
 
@@ -24,6 +26,8 @@ class PlantingDatasourceImpl implements PlantingDatasource {
       'user_id': userId,
       'description': description,
       'image_name': imageName,
+      'lat': latitude,
+      'long': longitude,
     });
   }
 }
