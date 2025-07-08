@@ -111,6 +111,23 @@ class MapPlantingController {
         });
   }
 
+  Future<void> moveCameraToCurrentLocation({double zoom = 18}) async {
+    final permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) return;
+
+    final Position current = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    final LatLng pos = LatLng(current.latitude, current.longitude);
+
+    final controller = await googleMapController.future;
+    controller.animateCamera(
+      CameraUpdate.newCameraPosition(CameraPosition(target: pos, zoom: zoom)),
+    );
+  }
+
   void dispose() {
     _positionStream?.cancel();
   }
