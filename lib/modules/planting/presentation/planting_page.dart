@@ -2,10 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:uuid/uuid.dart';
-
+import 'package:image_picker/image_picker.dart';
 import 'package:school_planting/core/constants/constants.dart';
 import 'package:school_planting/core/di/dependency_injection.dart';
 import 'package:school_planting/core/domain/entities/app_global.dart';
@@ -19,6 +17,7 @@ import 'package:school_planting/shared/components/custom_app_bar.dart';
 import 'package:school_planting/shared/components/custom_button.dart';
 import 'package:school_planting/shared/components/text_form_field.dart';
 import 'package:school_planting/shared/themes/app_theme_constants.dart';
+import 'package:uuid/uuid.dart';
 
 class PlantingPage extends StatefulWidget {
   const PlantingPage({super.key});
@@ -127,6 +126,7 @@ class _PlantingPageState extends State<PlantingPage> {
           child: Column(
             children: [
               AppTextFormField(
+                borderColor: Colors.white,
                 controller: _descController,
                 hint: 'Descrição da planta',
               ),
@@ -149,7 +149,11 @@ class _PlantingPageState extends State<PlantingPage> {
                           ),
                           child: Image.file(_image!, fit: BoxFit.cover),
                         )
-                      : Icon(Icons.camera_alt, size: 50, color: Colors.grey.shade700),
+                      : Icon(
+                          Icons.camera_alt,
+                          size: 50,
+                          color: Colors.grey.shade700,
+                        ),
                 ),
               ),
               const Spacer(),

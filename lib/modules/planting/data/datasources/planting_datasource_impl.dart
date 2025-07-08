@@ -5,7 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'planting_datasource.dart';
 
-@LazySingleton(as: PlantingDatasource)
+@Injectable(as: PlantingDatasource)
 class PlantingDatasourceImpl implements PlantingDatasource {
   final SupabaseClient _client;
 
@@ -20,12 +20,14 @@ class PlantingDatasourceImpl implements PlantingDatasource {
     required double latitude,
     required double longitude,
   }) async {
-    await _client.storage.from('escolaverdebucket').upload(imageName, image);
+    await _client.storage
+        .from('escolaverdebucket')
+        .upload('private/$imageName', image);
 
     await _client.from('user_plantings').insert({
       'user_id': userId,
       'description': description,
-      'image_name': imageName,
+      'image_url': imageName,
       'lat': latitude,
       'long': longitude,
     });
