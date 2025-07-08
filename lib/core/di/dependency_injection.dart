@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:school_planting/core/di/dependency_injection.config.dart';
@@ -27,6 +28,16 @@ Future<void> configureDependencies() async {
 abstract class RegisterModule {
   @preResolve
   Future<SharedPreferences> get prefs => SharedPreferences.getInstance();
+
+  Dio get dio => _dioFactory();
+}
+
+Dio _dioFactory() {
+  final BaseOptions baseOptions = BaseOptions(
+    headers: <String, dynamic>{'Content-Type': 'application/json'},
+  );
+
+  return Dio(baseOptions);
 }
 
 void _initAppGlobal() {
