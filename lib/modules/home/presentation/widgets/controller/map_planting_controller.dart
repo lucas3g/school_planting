@@ -122,18 +122,29 @@ class MapPlantingController {
         item.imageUrl,
       );
 
-      markers.add(
-        Marker(
-          markerId: MarkerId(item.imageUrl),
-          position: LatLng(item.latitude, item.longitude),
-          icon: icon,
-          infoWindow: InfoWindow(
-            title: item.userName,
-            snippet: item.description,
-            onTap: () => onTap(item),
+        markers.add(
+          Marker(
+            markerId: MarkerId(item.imageUrl),
+            position: LatLng(item.latitude, item.longitude),
+            icon: icon,
+            onTap: () async {
+              final controller = await googleMapController.future;
+              controller.animateCamera(
+                CameraUpdate.newCameraPosition(
+                  CameraPosition(
+                    target: LatLng(item.latitude, item.longitude),
+                    zoom: 18,
+                  ),
+                ),
+              );
+              onTap(item);
+            },
+            infoWindow: InfoWindow(
+              title: item.userName,
+              snippet: item.description,
+            ),
           ),
-        ),
-      );
+        );
     }
 
     onUpdated();
