@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui' as ui;
+import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class MapPlantingController {
   final Set<Marker> markers = {};
   final Completer<GoogleMapController> googleMapController = Completer();
   final Map<String, PlantingDetailEntity> _plantings = {};
+  final Map<String, Uint8List> _imageCache = {};
   String? _selectedMarkerId;
 
   MapPlantingController({required this.httpClient});
@@ -26,11 +28,23 @@ class MapPlantingController {
     int size = 40,
     Color borderColor = Colors.grey,
   }) async {
-    final HttpResponseEntity<dynamic> response = await httpClient.getImage(
-      imageUrl,
-    );
-
-    final bytes = response.data;
+    Uint8List bytes;
+    if (_imageCache.containsKey(imageUrl)) {
+      bytes = _imageCache[imageUrl]!;
+    } else {
+      final HttpResponseEntity<dynamic> response = await httpClient.getImage(
+        imageUrl,
+      );
+      final dynamic data = response.data;
+      if (data is Uint8List) {
+        bytes = data;
+      } else if (data is List<int>) {
+        bytes = Uint8List.fromList(data);
+      } else {
+        throw Exception('Unsupported image data type');
+      }
+      _imageCache[imageUrl] = bytes;
+    }
 
     final ui.Codec codec = await ui.instantiateImageCodec(
       bytes,
