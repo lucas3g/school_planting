@@ -47,15 +47,21 @@ class _CardUserWidgetState extends State<CardUserWidget> {
     final bool? shouldLogout = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: context.myTheme.primaryContainer,
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(
             AppThemeConstants.largeBorderRadius,
           ),
         ),
-        title: Text(
-          'Sair',
-          style: context.textTheme.titleMedium,
+        title: Row(
+          children: [
+            const Icon(Icons.logout),
+            const SizedBox(width: 8),
+            Text(
+              'Sair',
+              style: context.textTheme.titleMedium,
+            ),
+          ],
         ),
         content: Text(
           'Deseja realmente sair do aplicativo?',
@@ -66,7 +72,7 @@ class _CardUserWidgetState extends State<CardUserWidget> {
             onPressed: () => Navigator.pop(context, false),
             child: const Text('Cancelar'),
           ),
-          TextButton(
+          ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             child: const Text('Sair'),
           ),
