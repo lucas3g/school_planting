@@ -12,10 +12,13 @@ class MapPlantingController {
   final Set<Marker> markers = {};
   final Completer<GoogleMapController> googleMapController = Completer();
   StreamSubscription<Position>? _positionStream;
+  final Map<String, PlantingDetailEntity> _plantings = {};
+  String? _selectedMarkerId;
 
-  Future<BitmapDescriptor> _getCircularAvatarMarkerIcon(
+  Future<BitmapDescriptor> _getRoundedAvatarMarkerIcon(
     String imageUrl, {
     int size = 40,
+    Color borderColor = Colors.grey,
   }) async {
     final HttpClient httpClient = HttpClient();
     final HttpClientRequest request = await httpClient.getUrl(
@@ -34,21 +37,40 @@ class MapPlantingController {
 
     final ui.PictureRecorder recorder = ui.PictureRecorder();
     final Canvas canvas = Canvas(recorder);
-    final double radius = size / 2;
+    const double borderWidth = 3;
+    const double radius = 8;
 
-    canvas.drawCircle(
-      Offset(radius, radius),
-      radius,
-      Paint()..color = Colors.white,
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()),
+        const Radius.circular(radius),
+      ),
+      Paint()..color = borderColor,
     );
 
     canvas.save();
-    canvas.clipPath(
-      Path()..addOval(
-        Rect.fromCircle(center: Offset(radius, radius), radius: radius - 4),
+    canvas.clipRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(
+          borderWidth,
+          borderWidth,
+          size - borderWidth * 2,
+          size - borderWidth * 2,
+        ),
+        const Radius.circular(radius - 1),
       ),
     );
-    canvas.drawImage(avatarImage, Offset.zero, Paint());
+    canvas.drawImageRect(
+      avatarImage,
+      Rect.fromLTWH(0, 0, avatarImage.width.toDouble(), avatarImage.height.toDouble()),
+      Rect.fromLTWH(
+        borderWidth,
+        borderWidth,
+        size - borderWidth * 2,
+        size - borderWidth * 2,
+      ),
+      Paint(),
+    );
     canvas.restore();
 
     final ui.Image finalImage = await recorder.endRecording().toImage(
@@ -103,9 +125,11 @@ class MapPlantingController {
     void Function(PlantingDetailEntity) onTap,
   ) async {
     for (final item in plantings) {
-      final BitmapDescriptor icon = await _getCircularAvatarMarkerIcon(
+      final BitmapDescriptor icon = await _getRoundedAvatarMarkerIcon(
         item.imageUrl,
+        borderColor: Colors.grey,
       );
+      _plantings[item.imageUrl] = item;
 
       markers.add(
         Marker(
@@ -122,6 +146,9 @@ class MapPlantingController {
                 ),
               ),
             );
+            _selectedMarkerId = item.imageUrl;
+            await _updateMarkerIcons();
+            onUpdated();
             onTap(item);
           },
           infoWindow: InfoWindow(
@@ -133,6 +160,23 @@ class MapPlantingController {
     }
 
     onUpdated();
+  }
+
+  Future<void> _updateMarkerIcons() async {
+    final Set<Marker> updated = {};
+    for (final entry in _plantings.entries) {
+      final oldMarker =
+          markers.firstWhere((m) => m.markerId.value == entry.key);
+      final bool isSelected = entry.key == _selectedMarkerId;
+      final icon = await _getRoundedAvatarMarkerIcon(
+        entry.value.imageUrl,
+        borderColor: isSelected ? Colors.green : Colors.grey,
+      );
+      updated.add(oldMarker.copyWith(iconParam: icon));
+    }
+    markers
+      ..clear()
+      ..addAll(updated);
   }
 
   Future<void> moveCameraToCurrentLocation({double zoom = 18}) async {
