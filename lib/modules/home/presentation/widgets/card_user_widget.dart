@@ -55,22 +55,34 @@ class _CardUserWidgetState extends State<CardUserWidget> {
         ),
         title: Row(
           children: [
-            const Icon(Icons.logout),
+            const Icon(Icons.logout, color: Colors.black),
             const SizedBox(width: 8),
             Text(
               'Sair',
-              style: context.textTheme.titleMedium,
+              style: context.textTheme.titleMedium?.copyWith(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
         content: Text(
           'Deseja realmente sair do aplicativo?',
-          style: context.textTheme.bodyLarge,
+          style: context.textTheme.bodyLarge?.copyWith(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar'),
+            child: Text(
+              'Cancelar',
+              style: context.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: context.myTheme.primaryContainer,
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
@@ -159,10 +171,7 @@ class _CardUserWidgetState extends State<CardUserWidget> {
               IconButton(
                 icon: const Icon(Icons.list, color: Colors.white),
                 onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    NamedRoutes.myPlantings.route,
-                  );
+                  Navigator.pushNamed(context, NamedRoutes.myPlantings.route);
                 },
               ),
               BlocBuilder<AuthBloc, AuthStates>(
