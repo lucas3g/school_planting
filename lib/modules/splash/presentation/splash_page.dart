@@ -3,6 +3,7 @@ import 'package:school_planting/core/constants/constants.dart';
 import 'package:school_planting/core/domain/entities/app_assets.dart';
 import 'package:school_planting/core/domain/entities/app_global.dart';
 import 'package:school_planting/core/domain/entities/named_routes.dart';
+import 'package:school_planting/shared/components/app_circular_indicator_widget.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -47,15 +48,7 @@ class _SplashPageState extends State<SplashPage> {
             children: [
               Image.asset(AppAssets.logo, width: context.screenWidth * .5),
               const SizedBox(height: 20),
-              Text(
-                'Green Map',
-                style: context.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 20),
-              CircularProgressIndicator(),
+              AppCircularIndicatorWidget(),
             ],
           ),
         ),
