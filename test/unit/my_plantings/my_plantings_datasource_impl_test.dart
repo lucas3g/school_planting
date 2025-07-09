@@ -21,7 +21,7 @@ void main() {
           table: 'user_plantings_with_userinfo',
           columns:
               'description,image_url,lat,long,user_name,photourl,created_at',
-          filters: {'user_id': 'asdsadsadsadsa'},
+          filters: {'user_id': '1'},
           orderBy: 'created_at',
         ),
       ).thenAnswer(

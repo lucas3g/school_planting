@@ -17,19 +17,28 @@ void main() {
     });
 
     test('upload and insert are called', () async {
+      final file = File('tmp.txt');
+      await file.writeAsString('x');
+
       when(
         client.uploadFile(
-          bucket: anyNamed('bucket'),
-          path: anyNamed('path'),
-          file: anyNamed('file'),
+          bucket: 'escolaverdebucket',
+          path: 'private/img',
+          file: file,
         ),
       ).thenAnswer((_) async => {});
       when(
-        client.insert(table: 'user_plantings', data: anyNamed('data')),
+        client.insert(
+          table: 'user_plantings',
+          data: {
+            'user_id': '1',
+            'description': 'd',
+            'image_url': 'img',
+            'lat': 1,
+            'long': 2,
+          },
+        ),
       ).thenAnswer((_) async => {});
-
-      final file = File('tmp.txt');
-      await file.writeAsString('x');
 
       await datasource.createPlanting(
         userId: '1',
@@ -44,11 +53,20 @@ void main() {
         client.uploadFile(
           bucket: 'escolaverdebucket',
           path: 'private/img',
-          file: anyNamed('file'),
+          file: file,
         ),
       ).called(1);
       verify(
-        client.insert(table: 'user_plantings', data: anyNamed('data')),
+        client.insert(
+          table: 'user_plantings',
+          data: {
+            'user_id': '1',
+            'description': 'd',
+            'image_url': 'img',
+            'lat': 1,
+            'long': 2,
+          },
+        ),
       ).called(1);
     });
   });

@@ -20,52 +20,53 @@ void main() {
     });
 
     test('returns success on createPlanting', () async {
-      when(
-        datasource.createPlanting(
-          userId: anyNamed('userId'),
-          description: anyNamed('description'),
-          image: anyNamed('image'),
-          imageName: anyNamed('imageName'),
-          lat: anyNamed('lat'),
-          long: anyNamed('long'),
-        ),
-      ).thenAnswer((_) async => {});
-
       final entity = PlantingEntity(
-        description: 'd',
-        imageName: 'img',
-        userId: '1',
-        latitude: 1,
-        longitude: 2,
+        description: '',
+        imageName: '',
+        userId: '',
+        latitude: 0,
+        longitude: 0,
       );
 
       final file = File('f');
+
+      when(
+        datasource.createPlanting(
+          userId: '',
+          description: '',
+          image: file,
+          imageName: '',
+          lat: 0,
+          long: 0,
+        ),
+      ).thenAnswer((_) async => {});
+
       final result = await repository.createPlanting(entity, file);
 
       expect(result.isRight, true);
     });
 
     test('returns failure on error', () async {
-      when(
-        datasource.createPlanting(
-          userId: anyNamed('userId'),
-          description: anyNamed('description'),
-          image: anyNamed('image'),
-          imageName: anyNamed('imageName'),
-          lat: anyNamed('lat'),
-          long: anyNamed('long'),
-        ),
-      ).thenThrow(Exception('e'));
-
       final entity = PlantingEntity(
-        description: 'd',
-        imageName: 'img',
-        userId: '1',
-        latitude: 1,
-        longitude: 2,
+        description: '',
+        imageName: '',
+        userId: '',
+        latitude: 0,
+        longitude: 0,
       );
 
       final file = File('f');
+
+      when(
+        datasource.createPlanting(
+          userId: '',
+          description: '',
+          image: file,
+          imageName: '',
+          lat: 0,
+          long: 0,
+        ),
+      ).thenThrow(Exception('e'));
       final result = await repository.createPlanting(entity, file);
 
       expect(result.isLeft, true);
