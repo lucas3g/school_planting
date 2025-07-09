@@ -64,10 +64,11 @@ class _PlantingPageState extends State<PlantingPage> {
 
       showAppSnackbar(
         context,
-        title: 'Erro',
+        title: 'Atenção',
         message: 'Permita acesso à localização',
-        type: TypeSnack.error,
+        type: TypeSnack.warning,
       );
+
       return;
     }
 
@@ -169,7 +170,7 @@ class _PlantingPageState extends State<PlantingPage> {
                 builder: (context, state) {
                   return AppCustomButton(
                     expands: true,
-                    onPressed: () => _save(),
+                    onPressed: _save,
                     label: _handleButtonState(state),
                   );
                 },
