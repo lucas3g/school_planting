@@ -37,6 +37,18 @@ import '../../modules/home/presentation/controller/plantings_bloc.dart'
     as _i182;
 import '../../modules/home/presentation/widgets/controller/map_planting_controller.dart'
     as _i611;
+import '../../modules/my_plantings/data/datasources/my_plantings_datasource.dart'
+    as _i297;
+import '../../modules/my_plantings/data/datasources/my_plantings_datasource_impl.dart'
+    as _i1042;
+import '../../modules/my_plantings/data/repositories/my_plantings_repository_impl.dart'
+    as _i97;
+import '../../modules/my_plantings/domain/repositories/my_plantings_repository.dart'
+    as _i1041;
+import '../../modules/my_plantings/domain/usecases/get_my_plantings_usecase.dart'
+    as _i94;
+import '../../modules/my_plantings/presentation/controller/my_plantings_bloc.dart'
+    as _i116;
 import '../../modules/planting/data/datasources/planting_datasource.dart'
     as _i155;
 import '../../modules/planting/data/datasources/planting_datasource_impl.dart'
@@ -49,18 +61,6 @@ import '../../modules/planting/domain/usecases/create_planting_usecase.dart'
     as _i1045;
 import '../../modules/planting/presentation/controller/planting_bloc.dart'
     as _i97;
-import '../../modules/my_plantings/data/datasources/my_plantings_datasource.dart'
-    as _i1100;
-import '../../modules/my_plantings/data/datasources/my_plantings_datasource_impl.dart'
-    as _i1101;
-import '../../modules/my_plantings/data/repositories/my_plantings_repository_impl.dart'
-    as _i1102;
-import '../../modules/my_plantings/domain/repositories/my_plantings_repository.dart'
-    as _i1103;
-import '../../modules/my_plantings/domain/usecases/get_my_plantings_usecase.dart'
-    as _i1104;
-import '../../modules/my_plantings/presentation/controller/my_plantings_bloc.dart'
-    as _i1105;
 import '../data/clients/http/client_http.dart' as _i777;
 import '../data/clients/http/dio_http_client_impl.dart' as _i14;
 import '../data/clients/shared_preferences/local_storage_interface.dart'
@@ -94,6 +94,11 @@ extension GetItInjectableX on _i174.GetIt {
         supabaseClient: gh<_i86.ISupabaseClient>(),
       ),
     );
+    gh.factory<_i297.MyPlantingsDatasource>(
+      () => _i1042.MyPlantingsDatasourceImpl(
+        supabaseClient: gh<_i86.ISupabaseClient>(),
+      ),
+    );
     gh.factory<_i711.MapPlantingDatasource>(
       () => _i1020.MapPlantingDatasourceImpl(
         supabaseClient: gh<_i86.ISupabaseClient>(),
@@ -105,6 +110,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i655.AuthDatasource>(
       () =>
           _i275.AuthDatasourceImpl(supabaseClient: gh<_i86.ISupabaseClient>()),
+    );
+    gh.factory<_i1041.MyPlantingsRepository>(
+      () => _i97.MyPlantingsRepositoryImpl(
+        datasource: gh<_i297.MyPlantingsDatasource>(),
+      ),
     );
     gh.factory<_i56.MapPlantingRepository>(
       () => _i792.MapPlantingRepositoryImpl(
@@ -133,28 +143,15 @@ extension GetItInjectableX on _i174.GetIt {
         repository: gh<_i91.PlantingRepository>(),
       ),
     );
+    gh.factory<_i94.GetMyPlantingsUseCase>(
+      () => _i94.GetMyPlantingsUseCase(
+        repository: gh<_i1041.MyPlantingsRepository>(),
+      ),
+    );
     gh.factory<_i97.PlantingBloc>(
       () => _i97.PlantingBloc(
         createPlantingUseCase: gh<_i1045.CreatePlantingUseCase>(),
       ),
-    );
-    gh.factory<_i1100.MyPlantingsDatasource>(
-      () => _i1101.MyPlantingsDatasourceImpl(
-        supabaseClient: gh<_i86.ISupabaseClient>(),
-      ),
-    );
-    gh.factory<_i1103.MyPlantingsRepository>(
-      () => _i1102.MyPlantingsRepositoryImpl(
-        datasource: gh<_i1100.MyPlantingsDatasource>(),
-      ),
-    );
-    gh.factory<_i1104.GetMyPlantingsUseCase>(
-      () => _i1104.GetMyPlantingsUseCase(
-        repository: gh<_i1103.MyPlantingsRepository>(),
-      ),
-    );
-    gh.factory<_i1105.MyPlantingsBloc>(
-      () => _i1105.MyPlantingsBloc(usecase: gh<_i1104.GetMyPlantingsUseCase>()),
     );
     gh.factory<_i51.AutoLoginUseCase>(
       () => _i51.AutoLoginUseCase(authRepository: gh<_i779.AuthRepository>()),
@@ -175,6 +172,9 @@ extension GetItInjectableX on _i174.GetIt {
             gh<_i854.LoginWithGoogleAccountUseCase>(),
         logoutAccountUsecase: gh<_i720.LogoutAccountUsecase>(),
       ),
+    );
+    gh.factory<_i116.MyPlantingsBloc>(
+      () => _i116.MyPlantingsBloc(usecase: gh<_i94.GetMyPlantingsUseCase>()),
     );
     return this;
   }

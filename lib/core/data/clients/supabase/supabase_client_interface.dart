@@ -28,6 +28,7 @@ abstract class ISupabaseClient {
     required String table,
     required String columns,
     String? orderBy,
+    Map<String, dynamic> filters = const {},
   });
 
   Future<String> getImageUrl({required String bucket, required String path});

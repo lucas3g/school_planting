@@ -9,6 +9,7 @@ class CustomAppBar extends AppBar {
     super.leading,
     super.flexibleSpace,
     super.actions,
+    super.backgroundColor,
   }) : super(
          shape: const RoundedRectangleBorder(
            borderRadius: BorderRadius.only(

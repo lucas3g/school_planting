@@ -12,6 +12,7 @@ import 'package:school_planting/shared/components/app_snackbar.dart';
 import 'package:school_planting/shared/components/custom_app_bar.dart';
 import 'package:school_planting/shared/themes/app_theme_constants.dart';
 import 'package:school_planting/shared/utils/formatters.dart';
+import 'package:super_sliver_list/super_sliver_list.dart';
 
 class MyPlantingsPage extends StatefulWidget {
   const MyPlantingsPage({super.key});
@@ -44,79 +45,103 @@ class _MyPlantingsPageState extends State<MyPlantingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: const Text('Minhas Plantações')),
-      body: BlocConsumer<MyPlantingsBloc, MyPlantingsStates>(
-        bloc: _bloc,
-        listener: (context, state) {
-          if (state is MyPlantingsFailureState) {
-            showAppSnackbar(
-              context,
-              title: 'Erro',
-              message: state.message,
-              type: TypeSnack.error,
-            );
-          }
-        },
-        builder: (context, state) {
-          if (state is MyPlantingsLoadingState) {
-            return const Center(child: AppCircularIndicatorWidget());
-          }
-
-          if (state is MyPlantingsSuccessState) {
-            if (state.plantings.isEmpty) {
-              return const Center(child: Text('Nenhuma plantação encontrada'));
+      body: SafeArea(
+        child: BlocConsumer<MyPlantingsBloc, MyPlantingsStates>(
+          bloc: _bloc,
+          listener: (context, state) {
+            if (state is MyPlantingsFailureState) {
+              showAppSnackbar(
+                context,
+                title: 'Erro',
+                message: state.message,
+                type: TypeSnack.error,
+              );
+            }
+          },
+          builder: (context, state) {
+            if (state is MyPlantingsLoadingState) {
+              return const Center(child: AppCircularIndicatorWidget());
             }
 
-            return ListView.builder(
-              padding: const EdgeInsets.all(AppThemeConstants.padding),
-              itemCount: state.plantings.length,
-              itemBuilder: (context, index) {
-                final item = state.plantings[index];
-                final tag = item.imageUrl.split('/').last;
+            if (state is MyPlantingsSuccessState) {
+              if (state.plantings.isEmpty) {
+                return const Center(
+                  child: Text('Nenhuma plantação encontrada'),
+                );
+              }
 
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      GestureDetector(
-                        onTap: () => _showImage(item.imageUrl, tag),
-                        child: Hero(
-                          tag: tag,
-                          child: CachedNetworkImage(
-                            imageUrl: item.imageUrl,
-                            height: context.screenHeight * 0.25,
-                            width: context.screenWidth,
-                            fit: BoxFit.cover,
-                            filterQuality: FilterQuality.high,
-                            placeholder: (context, url) => const Center(
-                              child: AppCircularIndicatorWidget(),
+              return SuperListView.separated(
+                padding: const EdgeInsets.all(AppThemeConstants.padding),
+                itemCount: state.plantings.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 10),
+                itemBuilder: (context, index) {
+                  final item = state.plantings[index];
+                  final tag = item.imageUrl.split('/').last;
+
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        AppThemeConstants.largeBorderRadius,
+                      ),
+                    ),
+                    elevation: 5,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                          onTap: () => _showImage(item.imageUrl, tag),
+                          child: Hero(
+                            tag: tag,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(
+                                  AppThemeConstants.largeBorderRadius,
+                                ),
+                                topRight: Radius.circular(
+                                  AppThemeConstants.largeBorderRadius,
+                                ),
+                              ),
+                              child: CachedNetworkImage(
+                                imageUrl: item.imageUrl,
+                                height: context.screenHeight * 0.25,
+                                width: context.screenWidth,
+                                fit: BoxFit.cover,
+                                filterQuality: FilterQuality.high,
+                                placeholder: (context, url) => const Center(
+                                  child: AppCircularIndicatorWidget(),
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(AppThemeConstants.mediumPadding),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item.createdAt.diaMesAnoHora(),
-                              style: context.textTheme.bodySmall,
-                            ),
-                            const SizedBox(height: 4),
-                            Text(item.description),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.all(
+                            AppThemeConstants.mediumPadding,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item.createdAt.diaMesAnoHora(),
+                                style: context.textTheme.bodySmall,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(item.description),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            );
-          }
+                      ],
+                    ),
+                  );
+                },
+              );
+            }
 
-          return const SizedBox.shrink();
-        },
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }

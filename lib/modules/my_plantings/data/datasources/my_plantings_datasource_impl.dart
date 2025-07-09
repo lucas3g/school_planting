@@ -9,21 +9,20 @@ class MyPlantingsDatasourceImpl implements MyPlantingsDatasource {
   final ISupabaseClient _client;
 
   MyPlantingsDatasourceImpl({required ISupabaseClient supabaseClient})
-      : _client = supabaseClient;
+    : _client = supabaseClient;
 
   @override
   Future<List<MyPlantingEntity>> fetchMyPlantings(String userId) async {
     final List<dynamic> data = await _client.select(
       table: 'user_plantings_with_userinfo',
-      columns:
-          'user_id,description,image_url,lat,long,user_name,photourl,created_at',
+      columns: 'description,image_url,lat,long,user_name,photourl,created_at',
+      filters: {'user_id': userId},
+      orderBy: 'created_at',
     );
 
     final List<MyPlantingEntity> result = [];
 
     for (final item in data) {
-      if (item['user_id'] != userId) continue;
-
       final String imageName = item['image_url'] as String;
 
       final String url = await _client.getImageUrl(

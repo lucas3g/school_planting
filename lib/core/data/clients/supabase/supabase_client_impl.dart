@@ -55,13 +55,29 @@ class SupabaseClientImpl implements ISupabaseClient {
     required String table,
     required String columns,
     String? orderBy,
+    Map<String, dynamic> filters = const {},
   }) async {
     dynamic data;
 
     if (orderBy == null || orderBy.isEmpty) {
-      data = await _client.from(table).select(columns);
+      if (filters.isNotEmpty) {
+        data = await _client
+            .from(table)
+            .select(columns)
+            .eq(filters.keys.first, filters.values.first);
+      } else {
+        data = await _client.from(table).select(columns);
+      }
     } else {
-      data = await _client.from(table).select(columns).order(orderBy);
+      if (filters.isNotEmpty) {
+        data = await _client
+            .from(table)
+            .select(columns)
+            .eq(filters.keys.first, filters.values.first)
+            .order(orderBy);
+      } else {
+        data = await _client.from(table).select(columns).order(orderBy);
+      }
     }
 
     return data;

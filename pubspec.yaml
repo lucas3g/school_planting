@@ -55,6 +55,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   dotted_border: ^3.1.0
+  super_sliver_list: ^0.4.1
 
 dev_dependencies:
   flutter_test:
