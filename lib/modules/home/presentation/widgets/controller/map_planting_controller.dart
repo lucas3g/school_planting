@@ -19,7 +19,9 @@ class MapPlantingController {
   final Completer<GoogleMapController> googleMapController = Completer();
   final Map<String, PlantingDetailEntity> _plantings = {};
   final Map<String, Uint8List> _imageCache = {};
+  final Map<String, Marker> _markerMap = {};
   String? _selectedMarkerId;
+  String? _lastSelectedMarkerId;
 
   MapPlantingController({required this.httpClient});
 
@@ -139,33 +141,33 @@ class MapPlantingController {
         borderColor: Colors.grey,
       );
       _plantings[item.imageUrl] = item;
-
-      markers.add(
-        Marker(
-          markerId: MarkerId(item.imageUrl),
-          position: LatLng(item.latitude, item.longitude),
-          icon: icon,
-          onTap: () async {
-            final controller = await googleMapController.future;
-            controller.animateCamera(
-              CameraUpdate.newCameraPosition(
-                CameraPosition(
-                  target: LatLng(item.latitude, item.longitude),
-                  zoom: 18,
-                ),
+      final Marker marker = Marker(
+        markerId: MarkerId(item.imageUrl),
+        position: LatLng(item.latitude, item.longitude),
+        icon: icon,
+        onTap: () async {
+          final controller = await googleMapController.future;
+          controller.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                target: LatLng(item.latitude, item.longitude),
+                zoom: 18,
               ),
-            );
-            _selectedMarkerId = item.imageUrl;
-            await _updateMarkerIcons();
-            onUpdated();
-            onTap(item);
-          },
-          infoWindow: InfoWindow(
-            title: item.userName,
-            snippet: item.description,
-          ),
+            ),
+          );
+          _lastSelectedMarkerId = _selectedMarkerId;
+          _selectedMarkerId = item.imageUrl;
+          await _updateMarkerIcons();
+          onUpdated();
+          onTap(item);
+        },
+        infoWindow: InfoWindow(
+          title: item.userName,
+          snippet: item.description,
         ),
       );
+      markers.add(marker);
+      _markerMap[item.imageUrl] = marker;
     }
 
     onUpdated();
@@ -173,20 +175,36 @@ class MapPlantingController {
 
   Future<void> _updateMarkerIcons() async {
     final Set<Marker> updated = {};
-    for (final entry in _plantings.entries) {
-      final oldMarker = markers.firstWhere(
-        (m) => m.markerId.value == entry.key,
+
+    if (_lastSelectedMarkerId != null &&
+        _markerMap.containsKey(_lastSelectedMarkerId)) {
+      final Marker prevMarker = _markerMap[_lastSelectedMarkerId]!;
+      final BitmapDescriptor prevIcon = await _getRoundedAvatarMarkerIcon(
+        _plantings[_lastSelectedMarkerId!]!.imageUrl,
+        borderColor: Colors.grey,
       );
-      final bool isSelected = entry.key == _selectedMarkerId;
-      final icon = await _getRoundedAvatarMarkerIcon(
-        entry.value.imageUrl,
-        borderColor: isSelected ? Colors.green : Colors.grey,
-      );
-      updated.add(oldMarker.copyWith(iconParam: icon));
+      final Marker newPrev = prevMarker.copyWith(iconParam: prevIcon);
+      _markerMap[_lastSelectedMarkerId!] = newPrev;
+      updated.add(newPrev);
     }
-    markers
-      ..clear()
-      ..addAll(updated);
+
+    if (_selectedMarkerId != null && _markerMap.containsKey(_selectedMarkerId)) {
+      final Marker selected = _markerMap[_selectedMarkerId]!;
+      final BitmapDescriptor selectedIcon = await _getRoundedAvatarMarkerIcon(
+        _plantings[_selectedMarkerId!]!.imageUrl,
+        borderColor: Colors.green,
+      );
+      final Marker newSelected = selected.copyWith(iconParam: selectedIcon);
+      _markerMap[_selectedMarkerId!] = newSelected;
+      updated.add(newSelected);
+    }
+
+    if (updated.isNotEmpty) {
+      markers
+        ..removeWhere((m) =>
+            updated.any((u) => u.markerId.value == m.markerId.value))
+        ..addAll(updated);
+    }
   }
 
   Future<void> moveCameraToCurrentLocation({double zoom = 18}) async {
