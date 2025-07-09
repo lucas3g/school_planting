@@ -26,7 +26,7 @@ class MapPlantingController {
 
   Future<BitmapDescriptor> _getRoundedAvatarMarkerIcon(
     String imageUrl, {
-    int size = 40,
+    int size = 60,
     Color borderColor = Colors.grey,
   }) async {
     Uint8List bytes;
