@@ -31,7 +31,6 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
   void initState() {
     super.initState();
 
-    _controller.startLocationUpdates(() => setState(() {}));
     _platingBloc.add(LoadPlantingsEvent());
   }
 
