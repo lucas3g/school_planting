@@ -116,6 +116,15 @@ class _CardUserWidgetState extends State<CardUserWidget> {
                   ),
                 ),
               ),
+              IconButton(
+                icon: const Icon(Icons.list, color: Colors.white),
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    NamedRoutes.myPlantings.route,
+                  );
+                },
+              ),
               BlocBuilder<AuthBloc, AuthStates>(
                 bloc: _authBloc,
                 builder: (context, states) {

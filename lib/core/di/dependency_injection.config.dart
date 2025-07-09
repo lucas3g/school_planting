@@ -49,6 +49,18 @@ import '../../modules/planting/domain/usecases/create_planting_usecase.dart'
     as _i1045;
 import '../../modules/planting/presentation/controller/planting_bloc.dart'
     as _i97;
+import '../../modules/my_plantings/data/datasources/my_plantings_datasource.dart'
+    as _i1100;
+import '../../modules/my_plantings/data/datasources/my_plantings_datasource_impl.dart'
+    as _i1101;
+import '../../modules/my_plantings/data/repositories/my_plantings_repository_impl.dart'
+    as _i1102;
+import '../../modules/my_plantings/domain/repositories/my_plantings_repository.dart'
+    as _i1103;
+import '../../modules/my_plantings/domain/usecases/get_my_plantings_usecase.dart'
+    as _i1104;
+import '../../modules/my_plantings/presentation/controller/my_plantings_bloc.dart'
+    as _i1105;
 import '../data/clients/http/client_http.dart' as _i777;
 import '../data/clients/http/dio_http_client_impl.dart' as _i14;
 import '../data/clients/shared_preferences/local_storage_interface.dart'
@@ -125,6 +137,24 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i97.PlantingBloc(
         createPlantingUseCase: gh<_i1045.CreatePlantingUseCase>(),
       ),
+    );
+    gh.factory<_i1100.MyPlantingsDatasource>(
+      () => _i1101.MyPlantingsDatasourceImpl(
+        supabaseClient: gh<_i86.ISupabaseClient>(),
+      ),
+    );
+    gh.factory<_i1103.MyPlantingsRepository>(
+      () => _i1102.MyPlantingsRepositoryImpl(
+        datasource: gh<_i1100.MyPlantingsDatasource>(),
+      ),
+    );
+    gh.factory<_i1104.GetMyPlantingsUseCase>(
+      () => _i1104.GetMyPlantingsUseCase(
+        repository: gh<_i1103.MyPlantingsRepository>(),
+      ),
+    );
+    gh.factory<_i1105.MyPlantingsBloc>(
+      () => _i1105.MyPlantingsBloc(usecase: gh<_i1104.GetMyPlantingsUseCase>()),
     );
     gh.factory<_i51.AutoLoginUseCase>(
       () => _i51.AutoLoginUseCase(authRepository: gh<_i779.AuthRepository>()),
