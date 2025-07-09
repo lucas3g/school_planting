@@ -39,10 +39,44 @@ class _CardUserWidgetState extends State<CardUserWidget> {
 
     return IconButton(
       icon: const Icon(Icons.logout, color: Colors.white),
-      onPressed: () {
-        _authBloc.add(LogoutAccountEvent());
-      },
+      onPressed: _confirmLogout,
     );
+  }
+
+  Future<void> _confirmLogout() async {
+    final bool? shouldLogout = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: context.myTheme.primaryContainer,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(
+            AppThemeConstants.largeBorderRadius,
+          ),
+        ),
+        title: Text(
+          'Sair',
+          style: context.textTheme.titleMedium,
+        ),
+        content: Text(
+          'Deseja realmente sair do aplicativo?',
+          style: context.textTheme.bodyLarge,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Sair'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldLogout ?? false) {
+      _authBloc.add(LogoutAccountEvent());
+    }
   }
 
   void _listenAuthStates() {
