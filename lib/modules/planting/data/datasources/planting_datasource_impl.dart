@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:injectable/injectable.dart';
 import 'package:school_planting/core/data/clients/supabase/supabase_client_interface.dart';
+import 'package:school_planting/shared/utils/image_utils.dart';
 
 import 'planting_datasource.dart';
 
@@ -21,10 +22,11 @@ class PlantingDatasourceImpl implements PlantingDatasource {
     required double latitude,
     required double longitude,
   }) async {
+    final File compressed = await compressImage(image);
     await _client.uploadFile(
       bucket: 'escolaverdebucket',
       path: 'private/$imageName',
-      file: image,
+      file: compressed,
     );
 
     await _client.insert(
