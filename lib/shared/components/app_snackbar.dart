@@ -12,6 +12,8 @@ void showAppSnackbar(
   required TypeSnack type,
   int duration = 4,
 }) {
+  final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
+
   final SnackBar snackBar = SnackBar(
     backgroundColor: Colors.transparent,
     elevation: 0,
@@ -81,7 +83,7 @@ void showAppSnackbar(
           right: -2,
           child: IconButton(
             onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              messenger.hideCurrentSnackBar();
             },
             icon: const Icon(Icons.close),
             color: Colors.white,
@@ -91,7 +93,7 @@ void showAppSnackbar(
     ),
   );
 
-  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  messenger.showSnackBar(snackBar);
 }
 
 Color _returnBackgroundColor(TypeSnack type) {
