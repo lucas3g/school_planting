@@ -36,6 +36,31 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
     _platingBloc.add(LoadPlantingsEvent());
   }
 
+  void _showImage(String url) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.zero,
+          child: GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: Center(
+              child: Hero(
+                tag: url,
+                child: CachedNetworkImage(
+                  imageUrl: url,
+                  fit: BoxFit.contain,
+                  filterQuality: FilterQuality.high,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void _showDetail(PlantingDetailEntity detail) {
     showModalBottomSheet(
       context: context,
@@ -48,12 +73,18 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: CachedNetworkImage(
-                  imageUrl: detail.imageUrl,
-                  height: context.screenHeight * .25,
-                  width: context.screenWidth,
-                  fit: BoxFit.cover,
-                  filterQuality: FilterQuality.high,
+                child: GestureDetector(
+                  onTap: () => _showImage(detail.imageUrl),
+                  child: Hero(
+                    tag: detail.imageUrl,
+                    child: CachedNetworkImage(
+                      imageUrl: detail.imageUrl,
+                      height: context.screenHeight * .25,
+                      width: context.screenWidth,
+                      fit: BoxFit.cover,
+                      filterQuality: FilterQuality.high,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
