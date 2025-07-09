@@ -13,34 +13,38 @@ class MapPlantingDatasourceImpl implements MapPlantingDatasource {
 
   @override
   Future<List<PlantingDetailEntity>> fetchPlantings() async {
-    final List<dynamic> data = await _client.select(
-      table: 'user_plantings_with_userinfo',
-      columns: 'description,image_url,lat,long,user_name,photourl,created_at',
-    );
-
-    final List<PlantingDetailEntity> result = [];
-
-    for (final item in data) {
-      final String imageName = item['image_url'] as String;
-
-      final String url = await _client.getImageUrl(
-        bucket: 'escolaverdebucket',
-        path: 'private/$imageName',
+    try {
+      final List<dynamic> data = await _client.select(
+        table: 'user_plantings_with_userinfo',
+        columns: 'description,image_url,lat,long,user_name,photourl,created_at',
       );
 
-      result.add(
-        PlantingDetailEntity(
-          description: item['description'] as String? ?? '',
-          imageUrl: url,
-          userName: item['user_name'] as String? ?? '',
-          userImageUrl: item['photourl'] as String? ?? '',
-          lat: (item['lat'] as num).toDouble(),
-          long: (item['long'] as num).toDouble(),
-          createdAt: DateTime.parse(item['created_at'] as String),
-        ),
-      );
+      final List<PlantingDetailEntity> result = [];
+
+      for (final item in data) {
+        final String imageName = item['image_url'] as String;
+
+        final String url = await _client.getImageUrl(
+          bucket: 'escolaverdebucket',
+          path: 'private/$imageName',
+        );
+
+        result.add(
+          PlantingDetailEntity(
+            description: item['description'] as String? ?? '',
+            imageUrl: url,
+            userName: item['user_name'] as String? ?? '',
+            userImageUrl: item['photourl'] as String? ?? '',
+            lat: (item['lat'] as num).toDouble(),
+            long: (item['long'] as num).toDouble(),
+            createdAt: DateTime.parse(item['created_at'] as String),
+          ),
+        );
+      }
+
+      return result;
+    } catch (e) {
+      rethrow;
     }
-
-    return result;
   }
 }

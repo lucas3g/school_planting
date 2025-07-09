@@ -14,8 +14,8 @@ class MapPlantingController {
   MapPlantingController();
 
   Future<BitmapDescriptor> _getMarkerIcon() async {
-    return BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(),
+    return BitmapDescriptor.asset(
+      const ImageConfiguration(size: Size(50, 50)),
       'assets/images/marker.png',
     );
   }
