@@ -46,16 +46,14 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              InteractiveViewer(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: CachedNetworkImage(
-                    imageUrl: detail.imageUrl,
-                    height: context.screenHeight * .25,
-                    width: context.screenWidth,
-                    fit: BoxFit.cover,
-                    filterQuality: FilterQuality.high,
-                  ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: CachedNetworkImage(
+                  imageUrl: detail.imageUrl,
+                  height: context.screenHeight * .25,
+                  width: context.screenWidth,
+                  fit: BoxFit.cover,
+                  filterQuality: FilterQuality.high,
                 ),
               ),
               const SizedBox(height: 10),
