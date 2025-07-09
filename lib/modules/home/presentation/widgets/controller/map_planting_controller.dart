@@ -57,7 +57,7 @@ class MapPlantingController {
 
     final ui.PictureRecorder recorder = ui.PictureRecorder();
     final Canvas canvas = Canvas(recorder);
-    const double borderWidth = 3;
+    const double borderWidth = 4;
     const double radius = 8;
 
     canvas.drawRRect(
