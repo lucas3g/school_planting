@@ -142,16 +142,13 @@ class MapPlantingController {
       _plantings[item.imageUrl] = item;
       final Marker marker = Marker(
         markerId: MarkerId(item.imageUrl),
-        position: LatLng(item.latitude, item.longitude),
+        position: LatLng(item.lat, item.long),
         icon: icon,
         onTap: () async {
           final controller = await googleMapController.future;
           controller.animateCamera(
             CameraUpdate.newCameraPosition(
-              CameraPosition(
-                target: LatLng(item.latitude, item.longitude),
-                zoom: 18,
-              ),
+              CameraPosition(target: LatLng(item.lat, item.long), zoom: 18),
             ),
           );
           _lastSelectedMarkerId = _selectedMarkerId;

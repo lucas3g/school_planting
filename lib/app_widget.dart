@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:school_planting/core/domain/entities/named_routes.dart';
 import 'package:school_planting/core/routes/app_routes.dart';
 import 'package:school_planting/core/routes/domain/entities/custom_transition.dart';
@@ -24,6 +25,13 @@ class _AppWidgetState extends State<AppWidget> {
       darkTheme: darkThemeApp,
       themeMode: ThemeMode.dark,
       initialRoute: NamedRoutes.splash.route,
+      supportedLocales: const <Locale>[Locale('pt', 'BR')],
+      locale: const Locale('pt', 'BR'),
+      localizationsDelegates: const <LocalizationsDelegate>[
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       onGenerateRoute: CustomNavigator(
         generateAnimation: _generateAnimation,
       ).onGenerateRoute,

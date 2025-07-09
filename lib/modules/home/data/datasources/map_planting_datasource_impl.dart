@@ -15,7 +15,7 @@ class MapPlantingDatasourceImpl implements MapPlantingDatasource {
   Future<List<PlantingDetailEntity>> fetchPlantings() async {
     final List<dynamic> data = await _client.select(
       table: 'user_plantings_with_userinfo',
-      columns: 'description,image_url,lat,long,user_name,photourl',
+      columns: 'description,image_url,lat,long,user_name,photourl,created_at',
     );
 
     final List<PlantingDetailEntity> result = [];
@@ -34,8 +34,9 @@ class MapPlantingDatasourceImpl implements MapPlantingDatasource {
           imageUrl: url,
           userName: item['user_name'] as String? ?? '',
           userImageUrl: item['photourl'] as String? ?? '',
-          latitude: (item['lat'] as num).toDouble(),
-          longitude: (item['long'] as num).toDouble(),
+          lat: (item['lat'] as num).toDouble(),
+          long: (item['long'] as num).toDouble(),
+          createdAt: DateTime.parse(item['created_at'] as String),
         ),
       );
     }

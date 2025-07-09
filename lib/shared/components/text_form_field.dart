@@ -94,7 +94,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
           ),
         ),
         errorStyle: context.textTheme.bodyMedium?.copyWith(
-          color: widget.borderColor ?? context.myTheme.surface,
+          color: Colors.red.shade300,
         ),
         errorBorder: OutlineInputBorder(
           borderSide: BorderSide(

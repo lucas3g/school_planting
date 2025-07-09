@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -10,6 +9,7 @@ import 'package:school_planting/modules/home/presentation/controller/plantings_b
 import 'package:school_planting/modules/home/presentation/controller/plantings_events.dart';
 import 'package:school_planting/modules/home/presentation/controller/plantings_states.dart';
 import 'package:school_planting/modules/home/presentation/widgets/controller/map_planting_controller.dart';
+import 'package:school_planting/modules/home/presentation/widgets/modal_planting_info_widget.dart';
 import 'package:school_planting/shared/themes/app_theme_constants.dart';
 
 class MapPlantingWidget extends StatefulWidget {
@@ -36,80 +36,29 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
     _platingBloc.add(LoadPlantingsEvent());
   }
 
-  void _showImage(String url) {
-    showDialog(
-      context: context,
-      builder: (_) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          insetPadding: EdgeInsets.zero,
-          child: GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
-            child: Center(
-              child: Hero(
-                tag: url,
-                child: CachedNetworkImage(
-                  imageUrl: url,
-                  fit: BoxFit.contain,
-                  filterQuality: FilterQuality.high,
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   void _showDetail(PlantingDetailEntity detail) {
-    showModalBottomSheet(
-      context: context,
-      builder: (_) {
-        return Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: GestureDetector(
-                  onTap: () => _showImage(detail.imageUrl),
-                  child: Hero(
-                    tag: detail.imageUrl,
-                    child: CachedNetworkImage(
-                      imageUrl: detail.imageUrl,
-                      height: context.screenHeight * .25,
-                      width: context.screenWidth,
-                      fit: BoxFit.cover,
-                      filterQuality: FilterQuality.high,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  CircleAvatar(
-                    backgroundImage: CachedNetworkImageProvider(
-                      detail.userImageUrl,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      detail.userName,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Text(detail.description),
-            ],
-          ),
-        );
-      },
+    final tag = detail.imageUrl.split('/').last.split('?').first;
+
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        opaque: false,
+        barrierColor: Colors.black54,
+        barrierDismissible: true,
+        pageBuilder: (_, __, ___) =>
+            ModalPlantingInfoWidget(detail: detail, tag: tag),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          final offsetAnimation =
+              Tween<Offset>(
+                begin: const Offset(0, 1), // de baixo para cima
+                end: Offset.zero,
+              ).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
+              );
+
+          return SlideTransition(position: offsetAnimation, child: child);
+        },
+      ),
     );
   }
 
