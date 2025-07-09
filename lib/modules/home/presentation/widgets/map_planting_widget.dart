@@ -141,7 +141,10 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Icon(Icons.park_rounded, color: Colors.white),
-                const SizedBox(width: 5),
+                SizedBox(
+                  height: 20,
+                  child: VerticalDivider(color: Colors.white),
+                ),
                 Text(
                   'Plantar',
                   style: context.textTheme.bodyLarge?.copyWith(
