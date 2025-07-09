@@ -50,7 +50,7 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
                 borderRadius: BorderRadius.circular(8),
                 child: CachedNetworkImage(
                   imageUrl: detail.imageUrl,
-                  height: 180,
+                  height: context.screenHeight * .25,
                   width: context.screenWidth,
                   fit: BoxFit.cover,
                   filterQuality: FilterQuality.high,

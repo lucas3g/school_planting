@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:ui' as ui;
-import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -161,10 +160,10 @@ class MapPlantingController {
           onUpdated();
           onTap(item);
         },
-        infoWindow: InfoWindow(
-          title: item.userName,
-          snippet: item.description,
-        ),
+        // infoWindow: InfoWindow(
+        //   title: item.userName,
+        //   snippet: item.description,
+        // ),
       );
       markers.add(marker);
       _markerMap[item.imageUrl] = marker;
@@ -188,7 +187,8 @@ class MapPlantingController {
       updated.add(newPrev);
     }
 
-    if (_selectedMarkerId != null && _markerMap.containsKey(_selectedMarkerId)) {
+    if (_selectedMarkerId != null &&
+        _markerMap.containsKey(_selectedMarkerId)) {
       final Marker selected = _markerMap[_selectedMarkerId]!;
       final BitmapDescriptor selectedIcon = await _getRoundedAvatarMarkerIcon(
         _plantings[_selectedMarkerId!]!.imageUrl,
@@ -201,8 +201,9 @@ class MapPlantingController {
 
     if (updated.isNotEmpty) {
       markers
-        ..removeWhere((m) =>
-            updated.any((u) => u.markerId.value == m.markerId.value))
+        ..removeWhere(
+          (m) => updated.any((u) => u.markerId.value == m.markerId.value),
+        )
         ..addAll(updated);
     }
   }
