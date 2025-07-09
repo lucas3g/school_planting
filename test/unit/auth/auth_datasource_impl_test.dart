@@ -1,13 +1,9 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:school_planting/modules/auth/data/datasources/auth_datasource_impl.dart';
 import 'package:school_planting/modules/auth/domain/entities/user_entity.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../helpers/mocks.dart';
-import 'package:mockito/mockito.dart';
 
 void main() {
   group('AuthDatasourceImpl', () {

@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:school_planting/modules/planting/data/datasources/planting_datasource_impl.dart';
 import 'package:mockito/mockito.dart';
+import 'package:school_planting/modules/planting/data/datasources/planting_datasource_impl.dart';
 
 import '../../helpers/mocks.dart';
 
@@ -17,15 +17,16 @@ void main() {
     });
 
     test('upload and insert are called', () async {
-      when(client.uploadFile(
-        bucket: anyNamed('bucket'),
-        path: anyNamed('path'),
-        file: anyNamed('file'),
-      )).thenAnswer((_) async => {});
-      when(client.insert(
-        table: anyNamed('table'),
-        data: anyNamed('data'),
-      )).thenAnswer((_) async => {});
+      when(
+        client.uploadFile(
+          bucket: anyNamed('bucket'),
+          path: anyNamed('path'),
+          file: anyNamed('file'),
+        ),
+      ).thenAnswer((_) async => {});
+      when(
+        client.insert(table: 'user_plantings', data: anyNamed('data')),
+      ).thenAnswer((_) async => {});
 
       final file = File('tmp.txt');
       await file.writeAsString('x');
@@ -39,8 +40,16 @@ void main() {
         long: 2,
       );
 
-      verify(client.uploadFile(bucket: 'escolaverdebucket', path: 'private/img', file: anyNamed('file'))).called(1);
-      verify(client.insert(table: 'user_plantings', data: anyNamed('data'))).called(1);
+      verify(
+        client.uploadFile(
+          bucket: 'escolaverdebucket',
+          path: 'private/img',
+          file: anyNamed('file'),
+        ),
+      ).called(1);
+      verify(
+        client.insert(table: 'user_plantings', data: anyNamed('data')),
+      ).called(1);
     });
   });
 }

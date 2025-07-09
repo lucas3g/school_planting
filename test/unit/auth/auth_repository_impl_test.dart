@@ -1,12 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:school_planting/core/domain/entities/either_of.dart';
+import 'package:mockito/mockito.dart';
 import 'package:school_planting/modules/auth/data/repositories/auth_repository_impl.dart';
 import 'package:school_planting/modules/auth/domain/entities/auth_exception.dart';
 import 'package:school_planting/modules/auth/domain/entities/user_entity.dart';
 import 'package:school_planting/modules/auth/domain/repositories/auth_repository.dart';
 
 import '../../helpers/mocks.dart';
-import 'package:mockito/mockito.dart';
 
 void main() {
   group('AuthRepositoryImpl', () {

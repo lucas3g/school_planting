@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:school_planting/core/domain/entities/either_of.dart';
+import 'package:mockito/mockito.dart';
 import 'package:school_planting/core/domain/entities/app_global.dart';
 import 'package:school_planting/modules/auth/domain/entities/user_entity.dart';
 import 'package:school_planting/modules/my_plantings/data/repositories/my_plantings_repository_impl.dart';
@@ -7,7 +7,6 @@ import 'package:school_planting/modules/my_plantings/domain/entities/my_planting
 import 'package:school_planting/modules/my_plantings/domain/repositories/my_plantings_repository.dart';
 
 import '../../helpers/mocks.dart';
-import 'package:mockito/mockito.dart';
 
 void main() {
   group('MyPlantingsRepositoryImpl', () {
@@ -17,12 +16,15 @@ void main() {
     setUp(() {
       datasource = MockMyPlantingsDatasource();
       repository = MyPlantingsRepositoryImpl(datasource: datasource);
-      AppGlobal(user: UserEntity(id: '1', email: 'e', name: 'n'));
+      AppGlobal(
+        user: UserEntity(id: '1', email: 'e', name: 'n'),
+      );
     });
 
     test('returns plantings on success', () async {
-      when(datasource.fetchMyPlantings(any))
-          .thenAnswer((_) async => <MyPlantingEntity>[]);
+      when(
+        datasource.fetchMyPlantings('asdsadsadsadsa'),
+      ).thenAnswer((_) async => <MyPlantingEntity>[]);
 
       final result = await repository.getMyPlantings();
 
