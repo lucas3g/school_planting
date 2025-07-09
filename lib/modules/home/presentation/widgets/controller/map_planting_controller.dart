@@ -11,7 +11,6 @@ import 'package:school_planting/modules/home/domain/entities/planting_detail_ent
 class MapPlantingController {
   final Set<Marker> markers = {};
   final Completer<GoogleMapController> googleMapController = Completer();
-  StreamSubscription<Position>? _positionStream;
   final Map<String, PlantingDetailEntity> _plantings = {};
   String? _selectedMarkerId;
 
@@ -102,21 +101,6 @@ class MapPlantingController {
     );
 
     onUpdated();
-
-    _positionStream =
-        Geolocator.getPositionStream(
-          locationSettings: const LocationSettings(
-            accuracy: LocationAccuracy.best,
-            distanceFilter: 0,
-          ),
-        ).listen((Position position) async {
-          final LatLng pos = LatLng(position.latitude, position.longitude);
-
-          final controller = await googleMapController.future;
-          controller.animateCamera(CameraUpdate.newLatLng(pos));
-
-          onUpdated(); // Notifica a View para atualizar
-        });
   }
 
   Future<void> addPlantings(
@@ -198,7 +182,5 @@ class MapPlantingController {
     );
   }
 
-  void dispose() {
-    _positionStream?.cancel();
-  }
+  void dispose() {}
 }
