@@ -88,7 +88,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i14.DioClientHttpImpl(dio: gh<_i361.Dio>()),
     );
     gh.factory<_i611.MapPlantingController>(
-      () => _i611.MapPlantingController(httpClient: gh<_i777.ClientHttp>()),
+      () => _i611.MapPlantingController(),
     );
     gh.factory<_i655.AuthDatasource>(
       () =>
