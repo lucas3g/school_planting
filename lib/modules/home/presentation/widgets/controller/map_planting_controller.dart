@@ -1,31 +1,37 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:injectable/injectable.dart';
+import 'package:school_planting/core/data/clients/http/client_http.dart';
+import 'package:school_planting/core/domain/entities/response_entity.dart';
 import 'package:school_planting/modules/home/domain/entities/planting_detail_entity.dart';
 
+@injectable
 class MapPlantingController {
+  final ClientHttp httpClient;
+
   final Set<Marker> markers = {};
   final Completer<GoogleMapController> googleMapController = Completer();
   StreamSubscription<Position>? _positionStream;
   final Map<String, PlantingDetailEntity> _plantings = {};
   String? _selectedMarkerId;
 
+  MapPlantingController({required this.httpClient});
+
   Future<BitmapDescriptor> _getRoundedAvatarMarkerIcon(
     String imageUrl, {
     int size = 40,
     Color borderColor = Colors.grey,
   }) async {
-    final HttpClient httpClient = HttpClient();
-    final HttpClientRequest request = await httpClient.getUrl(
-      Uri.parse(imageUrl),
+    final HttpResponseEntity<dynamic> response = await httpClient.getImage(
+      imageUrl,
     );
-    final HttpClientResponse response = await request.close();
-    final bytes = await consolidateHttpClientResponseBytes(response);
+
+    final bytes = response.data;
 
     final ui.Codec codec = await ui.instantiateImageCodec(
       bytes,
@@ -62,7 +68,12 @@ class MapPlantingController {
     );
     canvas.drawImageRect(
       avatarImage,
-      Rect.fromLTWH(0, 0, avatarImage.width.toDouble(), avatarImage.height.toDouble()),
+      Rect.fromLTWH(
+        0,
+        0,
+        avatarImage.width.toDouble(),
+        avatarImage.height.toDouble(),
+      ),
       Rect.fromLTWH(
         borderWidth,
         borderWidth,
@@ -165,8 +176,9 @@ class MapPlantingController {
   Future<void> _updateMarkerIcons() async {
     final Set<Marker> updated = {};
     for (final entry in _plantings.entries) {
-      final oldMarker =
-          markers.firstWhere((m) => m.markerId.value == entry.key);
+      final oldMarker = markers.firstWhere(
+        (m) => m.markerId.value == entry.key,
+      );
       final bool isSelected = entry.key == _selectedMarkerId;
       final icon = await _getRoundedAvatarMarkerIcon(
         entry.value.imageUrl,

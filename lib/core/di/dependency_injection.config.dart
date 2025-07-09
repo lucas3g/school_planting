@@ -35,6 +35,8 @@ import '../../modules/home/domain/repositories/map_planting_repository.dart'
 import '../../modules/home/domain/usecases/get_plantings_usecase.dart' as _i655;
 import '../../modules/home/presentation/controller/plantings_bloc.dart'
     as _i182;
+import '../../modules/home/presentation/widgets/controller/map_planting_controller.dart'
+    as _i611;
 import '../../modules/planting/data/datasources/planting_datasource.dart'
     as _i155;
 import '../../modules/planting/data/datasources/planting_datasource_impl.dart'
@@ -71,19 +73,22 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i361.Dio>(() => registerModule.dio);
     gh.factory<_i824.ILocalStorage>(() => _i755.SharedPreferencesService());
-    gh.factory<_i711.MapPlantingDatasource>(
-      () => _i1020.MapPlantingDatasourceImpl(
-        supabaseClient: gh<_i86.ISupabaseClient>(),
-      ),
-    );
     gh.singleton<_i86.ISupabaseClient>(() => _i788.SupabaseClientImpl());
     gh.factory<_i155.PlantingDatasource>(
       () => _i64.PlantingDatasourceImpl(
         supabaseClient: gh<_i86.ISupabaseClient>(),
       ),
     );
+    gh.factory<_i711.MapPlantingDatasource>(
+      () => _i1020.MapPlantingDatasourceImpl(
+        supabaseClient: gh<_i86.ISupabaseClient>(),
+      ),
+    );
     gh.singleton<_i777.ClientHttp>(
       () => _i14.DioClientHttpImpl(dio: gh<_i361.Dio>()),
+    );
+    gh.factory<_i611.MapPlantingController>(
+      () => _i611.MapPlantingController(httpClient: gh<_i777.ClientHttp>()),
     );
     gh.factory<_i655.AuthDatasource>(
       () =>

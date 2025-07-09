@@ -19,7 +19,7 @@ class MapPlantingWidget extends StatefulWidget {
 }
 
 class _MapPlantingWidgetState extends State<MapPlantingWidget> {
-  final MapPlantingController _controller = MapPlantingController();
+  final MapPlantingController _controller = getIt<MapPlantingController>();
   final PlantingsBloc _platingBloc = getIt<PlantingsBloc>();
 
   static const CameraPosition _initialCameraPosition = CameraPosition(
