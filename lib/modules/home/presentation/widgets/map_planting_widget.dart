@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:school_planting/core/constants/constants.dart';
 import 'package:school_planting/core/di/dependency_injection.dart';
 import 'package:school_planting/core/domain/entities/named_routes.dart';
@@ -11,6 +12,7 @@ import 'package:school_planting/modules/home/presentation/controller/plantings_s
 import 'package:school_planting/modules/home/presentation/widgets/controller/map_planting_controller.dart';
 import 'package:school_planting/modules/home/presentation/widgets/modal_planting_info_widget.dart';
 import 'package:school_planting/shared/themes/app_theme_constants.dart';
+import 'package:school_planting/shared/components/app_circular_indicator_widget.dart';
 
 class MapPlantingWidget extends StatefulWidget {
   const MapPlantingWidget({super.key});
@@ -22,6 +24,8 @@ class MapPlantingWidget extends StatefulWidget {
 class _MapPlantingWidgetState extends State<MapPlantingWidget> {
   final MapPlantingController _controller = getIt<MapPlantingController>();
   final PlantingsBloc _platingBloc = getIt<PlantingsBloc>();
+  bool _loadingLocation = true;
+  LatLng? _currentPosition;
 
   static const CameraPosition _initialCameraPosition = CameraPosition(
     target: LatLng(-15.7942, -47.8822),
@@ -32,8 +36,28 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
   void initState() {
     super.initState();
 
-    _controller.startLocationUpdates(() => setState(() {}));
+    _getCurrentLocation();
     _platingBloc.add(LoadPlantingsEvent());
+  }
+
+  Future<void> _getCurrentLocation() async {
+    final permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      setState(() {
+        _loadingLocation = false;
+      });
+      return;
+    }
+
+    final Position current = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    _currentPosition = LatLng(current.latitude, current.longitude);
+    setState(() {
+      _loadingLocation = false;
+    });
   }
 
   void _showDetail(PlantingDetailEntity detail) {
@@ -71,6 +95,12 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (_loadingLocation) {
+      return const Scaffold(
+        body: Center(child: AppCircularIndicatorWidget()),
+      );
+    }
+
     return BlocProvider.value(
       value: _platingBloc,
       child: BlocListener<PlantingsBloc, PlantingsStates>(
@@ -86,9 +116,18 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
         child: Scaffold(
           body: GoogleMap(
             initialCameraPosition: _initialCameraPosition,
-            onMapCreated: (controller) {
+            onMapCreated: (controller) async {
               _controller.googleMapController.complete(controller);
-              _controller.moveCameraToCurrentLocation();
+              if (_currentPosition != null) {
+                final mapController = await _controller.googleMapController.future;
+                mapController.animateCamera(
+                  CameraUpdate.newCameraPosition(
+                    CameraPosition(target: _currentPosition!, zoom: 18),
+                  ),
+                );
+              } else {
+                _controller.moveCameraToCurrentLocation();
+              }
             },
             mapType: MapType.normal,
             markers: _controller.markers,
