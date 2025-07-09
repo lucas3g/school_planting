@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -47,18 +48,21 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  detail.imageUrl,
+                child: CachedNetworkImage(
+                  imageUrl: detail.imageUrl,
                   height: 180,
-                  width: double.infinity,
+                  width: context.screenWidth,
                   fit: BoxFit.cover,
+                  filterQuality: FilterQuality.high,
                 ),
               ),
               const SizedBox(height: 10),
               Row(
                 children: [
                   CircleAvatar(
-                    backgroundImage: NetworkImage(detail.userImageUrl),
+                    backgroundImage: CachedNetworkImageProvider(
+                      detail.userImageUrl,
+                    ),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
