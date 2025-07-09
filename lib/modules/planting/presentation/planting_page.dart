@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
@@ -34,10 +35,46 @@ class _PlantingPageState extends State<PlantingPage> {
   File? _image;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  StreamSubscription<PlantingStates>? _plantingSub;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _listenPlantingStates();
+  }
+
   @override
   void dispose() {
     _descController.dispose();
+    _plantingSub?.cancel();
     super.dispose();
+  }
+
+  void _listenPlantingStates() {
+    _plantingSub = _bloc.stream.listen((state) {
+      if (state is PlantingSuccessState) {
+        if (!mounted) return;
+
+        showAppSnackbar(
+          context,
+          title: 'Sucesso',
+          message: 'Plantação registrada',
+          type: TypeSnack.success,
+        );
+        Navigator.pop(context);
+      }
+      if (state is PlantingFailureState) {
+        if (!mounted) return;
+
+        showAppSnackbar(
+          context,
+          title: 'Erro',
+          message: state.message,
+          type: TypeSnack.error,
+        );
+      }
+    });
   }
 
   Future<void> _takePhoto() async {
@@ -143,136 +180,111 @@ class _PlantingPageState extends State<PlantingPage> {
           ],
         ),
       ),
-      body: BlocListener<PlantingBloc, PlantingStates>(
-        bloc: _bloc,
-        listener: (context, state) {
-          if (state is PlantingSuccessState) {
-            showAppSnackbar(
-              context,
-              title: 'Sucesso',
-              message: 'Plantação registrada',
-              type: TypeSnack.success,
-            );
-            Navigator.pop(context);
-          }
-          if (state is PlantingFailureState) {
-            showAppSnackbar(
-              context,
-              title: 'Erro',
-              message: state.message,
-              type: TypeSnack.error,
-            );
-          }
-        },
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              padding: EdgeInsets.only(
-                left: AppThemeConstants.padding,
-                right: AppThemeConstants.padding,
-                top: AppThemeConstants.padding,
-              ),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: IntrinsicHeight(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Descrição da Planta',
-                              style: context.textTheme.bodyLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            padding: EdgeInsets.only(
+              left: AppThemeConstants.padding,
+              right: AppThemeConstants.padding,
+              top: AppThemeConstants.padding,
+            ),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: IntrinsicHeight(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Descrição da Planta',
+                            style: context.textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
                             ),
-                            const SizedBox(height: 10),
-                            AppTextFormField(
-                              borderColor: Colors.white,
-                              controller: _descController,
-                              hint: 'Escreva sobre a planta',
-                              textArea: true,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Descrição é obrigatória';
-                                }
-                                return null;
-                              },
+                          ),
+                          const SizedBox(height: 10),
+                          AppTextFormField(
+                            borderColor: Colors.white,
+                            controller: _descController,
+                            hint: 'Escreva sobre a planta',
+                            textArea: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Descrição é obrigatória';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            'Foto da Planta',
+                            style: context.textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
                             ),
-                            const SizedBox(height: 10),
-                            Text(
-                              'Foto da Planta',
-                              style: context.textTheme.bodyLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            GestureDetector(
-                              onTap: _takePhoto,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(2),
-                                child: DottedBorder(
-                                  options: RectDottedBorderOptions(
-                                    color: _image != null
-                                        ? Colors.transparent
-                                        : Colors.white,
-                                    strokeWidth: 2,
-                                    dashPattern: const [10, 5],
-                                  ),
-                                  child: SizedBox(
-                                    height: context.screenHeight * .3,
-                                    width: context.screenWidth,
-                                    child: _image != null
-                                        ? ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                              AppThemeConstants
-                                                  .mediumBorderRadius,
-                                            ),
-                                            child: Image.file(
-                                              _image!,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          )
-                                        : Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Icon(
-                                                Icons.camera_alt,
-                                                size: 50,
-                                                color: Colors.grey.shade700,
-                                              ),
-                                              Text(
-                                                'Toque para tirar uma foto',
-                                                style: context
-                                                    .textTheme
-                                                    .bodyLarge
-                                                    ?.copyWith(
-                                                      color:
-                                                          Colors.grey.shade700,
-                                                    ),
-                                              ),
-                                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          GestureDetector(
+                            onTap: _takePhoto,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(2),
+                              child: DottedBorder(
+                                options: RectDottedBorderOptions(
+                                  color: _image != null
+                                      ? Colors.transparent
+                                      : Colors.white,
+                                  strokeWidth: 2,
+                                  dashPattern: const [10, 5],
+                                ),
+                                child: SizedBox(
+                                  height: context.screenHeight * .3,
+                                  width: context.screenWidth,
+                                  child: _image != null
+                                      ? ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            AppThemeConstants
+                                                .mediumBorderRadius,
                                           ),
-                                  ),
+                                          child: Image.file(
+                                            _image!,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )
+                                      : Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.camera_alt,
+                                              size: 50,
+                                              color: Colors.grey.shade700,
+                                            ),
+                                            Text(
+                                              'Toque para tirar uma foto',
+                                              style: context.textTheme.bodyLarge
+                                                  ?.copyWith(
+                                                    color: Colors.grey.shade700,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }
