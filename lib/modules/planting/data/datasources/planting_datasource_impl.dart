@@ -11,7 +11,7 @@ class PlantingDatasourceImpl implements PlantingDatasource {
   final ISupabaseClient _client;
 
   PlantingDatasourceImpl({required ISupabaseClient supabaseClient})
-      : _client = supabaseClient;
+    : _client = supabaseClient;
 
   @override
   Future<void> createPlanting({
@@ -19,10 +19,11 @@ class PlantingDatasourceImpl implements PlantingDatasource {
     required String description,
     required File image,
     required String imageName,
-    required double latitude,
-    required double longitude,
+    required double lat,
+    required double long,
   }) async {
     final File compressed = await compressImage(image);
+
     await _client.uploadFile(
       bucket: 'escolaverdebucket',
       path: 'private/$imageName',
@@ -35,8 +36,8 @@ class PlantingDatasourceImpl implements PlantingDatasource {
         'user_id': userId,
         'description': description,
         'image_url': imageName,
-        'lat': latitude,
-        'long': longitude,
+        'lat': lat,
+        'long': long,
       },
     );
   }

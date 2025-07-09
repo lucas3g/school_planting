@@ -13,7 +13,7 @@ class PlantingRepositoryImpl implements PlantingRepository {
   final PlantingDatasource _datasource;
 
   PlantingRepositoryImpl({required PlantingDatasource datasource})
-      : _datasource = datasource;
+    : _datasource = datasource;
 
   @override
   Future<EitherOf<AppFailure, VoidSuccess>> createPlanting(
@@ -26,8 +26,8 @@ class PlantingRepositoryImpl implements PlantingRepository {
         description: planting.description,
         image: image,
         imageName: planting.imageName,
-        latitude: planting.latitude,
-        longitude: planting.longitude,
+        lat: planting.latitude,
+        long: planting.longitude,
       );
       return resolve(const VoidSuccess());
     } on AppFailure catch (e) {

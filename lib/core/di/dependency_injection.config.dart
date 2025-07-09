@@ -72,6 +72,9 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
     );
     gh.factory<_i361.Dio>(() => registerModule.dio);
+    gh.factory<_i611.MapPlantingController>(
+      () => _i611.MapPlantingController(),
+    );
     gh.factory<_i824.ILocalStorage>(() => _i755.SharedPreferencesService());
     gh.singleton<_i86.ISupabaseClient>(() => _i788.SupabaseClientImpl());
     gh.factory<_i155.PlantingDatasource>(
@@ -86,9 +89,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.singleton<_i777.ClientHttp>(
       () => _i14.DioClientHttpImpl(dio: gh<_i361.Dio>()),
-    );
-    gh.factory<_i611.MapPlantingController>(
-      () => _i611.MapPlantingController(),
     );
     gh.factory<_i655.AuthDatasource>(
       () =>

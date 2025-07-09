@@ -6,7 +6,7 @@ abstract class PlantingDatasource {
     required String description,
     required File image,
     required String imageName,
-    required double latitude,
-    required double longitude,
+    required double lat,
+    required double long,
   });
 }
