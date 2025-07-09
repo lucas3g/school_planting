@@ -19,18 +19,19 @@ void main() {
     });
 
     test('calls repository to create planting', () async {
-      when(
-        repository.createPlanting(any, any),
-      ).thenAnswer((_) async => resolve(const VoidSuccess()));
-
       final entity = PlantingEntity(
-        description: 'd',
-        imageName: 'img',
-        userId: '1',
-        latitude: 1,
-        longitude: 2,
+        description: '',
+        imageName: '',
+        userId: '',
+        latitude: 0,
+        longitude: 0,
       );
       final file = File('test.txt');
+
+      when(
+        repository.createPlanting(entity, file),
+      ).thenAnswer((_) async => resolve(const VoidSuccess()));
+
       final params = CreatePlantingParams(entity: entity, image: file);
 
       final result = await usecase(params);
