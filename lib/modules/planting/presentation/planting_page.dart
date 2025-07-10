@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:animations/animations.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,7 +15,6 @@ import 'package:school_planting/shared/components/custom_app_bar.dart';
 import 'package:school_planting/shared/components/custom_button.dart';
 import 'package:school_planting/shared/components/text_form_field.dart';
 import 'package:school_planting/shared/themes/app_theme_constants.dart';
-import 'package:animations/animations.dart';
 import 'package:uuid/uuid.dart';
 
 import 'processing_page.dart';
@@ -151,8 +151,15 @@ class _PlantingPageState extends State<PlantingPage> {
           children: [
             Divider(),
             OpenContainer<bool>(
-              transitionDuration: const Duration(milliseconds: 500),
-              tappable: false,
+              openColor: context.myTheme.onPrimary,
+              closedColor: Colors.transparent,
+              closedElevation: 0,
+              transitionDuration: const Duration(seconds: 5),
+              closedShape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                  AppThemeConstants.mediumBorderRadius,
+                ),
+              ),
               openBuilder: (context, _) {
                 return ProcessingPage(
                   entity: _processingEntity!,

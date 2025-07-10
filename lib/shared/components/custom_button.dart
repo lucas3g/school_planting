@@ -14,6 +14,7 @@ class AppCustomButton extends StatelessWidget {
   final Key? buttonKey;
   Color? backgroundColor;
   double radius;
+  bool hasElevation;
 
   AppCustomButton({
     super.key,
@@ -25,6 +26,7 @@ class AppCustomButton extends StatelessWidget {
     this.buttonKey,
     this.backgroundColor,
     this.radius = AppThemeConstants.mediumBorderRadius,
+    this.hasElevation = true,
   });
 
   @override

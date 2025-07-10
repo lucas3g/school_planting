@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
@@ -17,7 +18,11 @@ class PlantNetDatasourceImpl implements PlantNetDatasource {
 
   @override
   Future<bool> isPlantImage(File image) async {
-    final bytes = await image.readAsBytes();
+    final bytes = await Isolate.run(() async {
+      final bytes = await image.readAsBytes();
+
+      return bytes;
+    });
 
     final formData = FormData.fromMap({
       'organs': 'auto',
