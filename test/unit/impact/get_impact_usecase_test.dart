@@ -25,6 +25,10 @@ void main() {
 
       verify(repository.getImpactData()).called(1);
       expect(result.isRight, true);
+      result.get((_) => null, (data) {
+        expect(data.totalPlantings, 1);
+        return null;
+      });
     });
   });
 }

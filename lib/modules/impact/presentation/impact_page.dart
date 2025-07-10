@@ -43,6 +43,25 @@ class _ImpactPageState extends State<ImpactPage> {
     );
   }
 
+  Widget _buildSummary(int count) {
+    final String text =
+        'Você já realizou $count ${count == 1 ? 'plantação' : 'plantações'}!';
+    return Card(
+      margin: const EdgeInsets.only(bottom: AppThemeConstants.padding),
+      child: Padding(
+        padding: const EdgeInsets.all(AppThemeConstants.mediumPadding),
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+      ),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,6 +79,7 @@ class _ImpactPageState extends State<ImpactPage> {
                 padding: const EdgeInsets.all(AppThemeConstants.padding),
                 child: Column(
                   children: [
+                      _buildSummary(m.totalPlantings),
                     _buildItem(
                       'Oxigênio gerado',
                       m.oxygen.toStringAsFixed(1),

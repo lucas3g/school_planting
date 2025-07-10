@@ -5,6 +5,7 @@ class ImpactEntity {
   final double water;
   final double biodiversity;
   final double airQuality;
+  final int totalPlantings;
 
   ImpactEntity({
     required this.oxygen,
@@ -13,6 +14,7 @@ class ImpactEntity {
     required this.water,
     required this.biodiversity,
     required this.airQuality,
+    required this.totalPlantings,
   });
 
   factory ImpactEntity.fromCount(int count) {
@@ -30,6 +32,7 @@ class ImpactEntity {
       water: waterPerPlant * count,
       biodiversity: biodiversityPerPlant * count,
       airQuality: airQualityPerPlant * count,
+      totalPlantings: count,
     );
   }
 }
