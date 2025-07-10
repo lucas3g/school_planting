@@ -111,15 +111,39 @@ class _ProcessingPageState extends State<ProcessingPage> {
             : Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  Lottie.asset(
+                    'assets/lotties/barcode.json',
+                    width: context.screenWidth * .5,
+                    repeat: true,
                   ),
                   const SizedBox(height: 20),
-                  Text(
-                    _message,
-                    style: context.textTheme.bodyLarge?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 500),
+                    switchInCurve: Curves.easeInOut,
+                    switchOutCurve: Curves.easeInOut,
+                    transitionBuilder: (child, animation) {
+                      final offsetAnimation = Tween<Offset>(
+                        begin: const Offset(0, 1),
+                        end: Offset.zero,
+                      ).animate(animation);
+                      if (animation.status == AnimationStatus.reverse) {
+                        return FadeTransition(opacity: animation, child: child);
+                      }
+                      return SlideTransition(
+                        position: offsetAnimation,
+                        child: FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        ),
+                      );
+                    },
+                    child: Text(
+                      _message,
+                      key: ValueKey<String>(_message),
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
