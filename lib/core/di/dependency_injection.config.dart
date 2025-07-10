@@ -37,6 +37,15 @@ import '../../modules/home/presentation/controller/plantings_bloc.dart'
     as _i182;
 import '../../modules/home/presentation/widgets/controller/map_planting_controller.dart'
     as _i611;
+import '../../modules/impact/data/datasources/impact_datasource.dart' as _i400;
+import '../../modules/impact/data/datasources/impact_datasource_impl.dart'
+    as _i176;
+import '../../modules/impact/data/repositories/impact_repository_impl.dart'
+    as _i56;
+import '../../modules/impact/domain/repositories/impact_repository.dart'
+    as _i682;
+import '../../modules/impact/domain/usecases/get_impact_usecase.dart' as _i25;
+import '../../modules/impact/presentation/controller/impact_bloc.dart' as _i306;
 import '../../modules/my_plantings/data/datasources/my_plantings_datasource.dart'
     as _i297;
 import '../../modules/my_plantings/data/datasources/my_plantings_datasource_impl.dart'
@@ -107,6 +116,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i777.ClientHttp>(
       () => _i14.DioClientHttpImpl(dio: gh<_i361.Dio>()),
     );
+    gh.factory<_i400.ImpactDatasource>(
+      () => _i176.ImpactDatasourceImpl(
+        supabaseClient: gh<_i86.ISupabaseClient>(),
+      ),
+    );
     gh.factory<_i655.AuthDatasource>(
       () =>
           _i275.AuthDatasourceImpl(supabaseClient: gh<_i86.ISupabaseClient>()),
@@ -143,6 +157,9 @@ extension GetItInjectableX on _i174.GetIt {
         repository: gh<_i91.PlantingRepository>(),
       ),
     );
+    gh.factory<_i682.ImpactRepository>(
+      () => _i56.ImpactRepositoryImpl(datasource: gh<_i400.ImpactDatasource>()),
+    );
     gh.factory<_i94.GetMyPlantingsUseCase>(
       () => _i94.GetMyPlantingsUseCase(
         repository: gh<_i1041.MyPlantingsRepository>(),
@@ -152,6 +169,9 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i97.PlantingBloc(
         createPlantingUseCase: gh<_i1045.CreatePlantingUseCase>(),
       ),
+    );
+    gh.factory<_i25.GetImpactUseCase>(
+      () => _i25.GetImpactUseCase(repository: gh<_i682.ImpactRepository>()),
     );
     gh.factory<_i51.AutoLoginUseCase>(
       () => _i51.AutoLoginUseCase(authRepository: gh<_i779.AuthRepository>()),
@@ -175,6 +195,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i116.MyPlantingsBloc>(
       () => _i116.MyPlantingsBloc(usecase: gh<_i94.GetMyPlantingsUseCase>()),
+    );
+    gh.factory<_i306.ImpactBloc>(
+      () => _i306.ImpactBloc(usecase: gh<_i25.GetImpactUseCase>()),
     );
     return this;
   }
