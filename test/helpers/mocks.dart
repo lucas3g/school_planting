@@ -8,6 +8,8 @@ import 'package:school_planting/modules/my_plantings/data/datasources/my_plantin
 import 'package:school_planting/modules/my_plantings/domain/repositories/my_plantings_repository.dart';
 import 'package:school_planting/modules/planting/data/datasources/planting_datasource.dart';
 import 'package:school_planting/modules/planting/domain/repositories/planting_repository.dart';
+import 'package:school_planting/modules/impact/data/datasources/impact_datasource.dart';
+import 'package:school_planting/modules/impact/domain/repositories/impact_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
@@ -20,3 +22,5 @@ class MockMyPlantingsDatasource extends Mock implements MyPlantingsDatasource {}
 class MockPlantingRepository extends Mock implements PlantingRepository {}
 class MockPlantingDatasource extends Mock implements PlantingDatasource {}
 class MockSupabaseUser extends Mock implements User {}
+class MockImpactDatasource extends Mock implements ImpactDatasource {}
+class MockImpactRepository extends Mock implements ImpactRepository {}
