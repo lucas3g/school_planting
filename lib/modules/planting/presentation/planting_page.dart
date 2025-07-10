@@ -108,30 +108,36 @@ class _PlantingPageState extends State<PlantingPage> {
 
     if (!mounted) return;
 
-    final RenderBox box =
-        _saveButtonKey.currentContext!.findRenderObject() as RenderBox;
-    final Offset position = box.localToGlobal(box.size.center(Offset.zero));
-    final Size screen = MediaQuery.of(context).size;
-    final Alignment alignment = Alignment(
-      (position.dx / screen.width) * 2 - 1,
-      (position.dy / screen.height) * 2 - 1,
-    );
-
     final result = await Navigator.push<bool>(
       context,
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 500),
         pageBuilder: (_, __, ___) =>
             ProcessingPage(entity: entity, image: _image!),
-        transitionsBuilder: (_, animation, __, child) {
+        transitionsBuilder: (context, animation, __, child) {
           final curved = CurvedAnimation(
             parent: animation,
-            curve: Curves.easeOutCubic,
+            curve: Curves.easeInOut,
           );
-          return ScaleTransition(
-            scale: curved,
-            alignment: alignment,
-            child: child,
+
+          return Align(
+            alignment: Alignment.bottomCenter,
+            child: AnimatedBuilder(
+              animation: curved,
+              builder: (context, child) {
+                return ClipRRect(
+                  borderRadius:
+                      BorderRadius.circular(20 * (1 - curved.value)),
+                  child: FractionallySizedBox(
+                    heightFactor: curved.value,
+                    widthFactor: 1.0,
+                    alignment: Alignment.bottomCenter,
+                    child: child,
+                  ),
+                );
+              },
+              child: child,
+            ),
           );
         },
       ),
