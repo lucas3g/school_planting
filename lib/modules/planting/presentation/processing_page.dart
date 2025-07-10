@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:school_planting/core/constants/constants.dart';
 import 'package:school_planting/core/di/dependency_injection.dart';
 import 'package:school_planting/modules/planting/domain/entities/planting_entity.dart';
 import 'package:school_planting/modules/planting/domain/usecases/create_planting_usecase.dart';
@@ -20,6 +21,7 @@ class ProcessingPage extends StatefulWidget {
 class _ProcessingPageState extends State<ProcessingPage> {
   String _message = 'verificando imagem';
   bool _success = false;
+  bool _notPlant = false;
 
   @override
   void initState() {
@@ -35,7 +37,10 @@ class _ProcessingPageState extends State<ProcessingPage> {
 
     if (validation.isLeft || !validation.isRight) {
       if (!mounted) return;
-      setState(() => _message = 'Imagem enviada não é uma planta');
+      setState(() {
+        _message = 'Imagem enviada não é uma planta';
+        _notPlant = true;
+      });
       await Future.delayed(const Duration(seconds: 2));
       if (mounted) Navigator.pop(context, false);
       return;
@@ -56,7 +61,7 @@ class _ProcessingPageState extends State<ProcessingPage> {
       },
       (_) async {
         setState(() => _success = true);
-        await Future.delayed(const Duration(seconds: 1));
+        await Future.delayed(const Duration(milliseconds: 1500));
         if (mounted) Navigator.pop(context, true);
       },
     );
@@ -67,10 +72,41 @@ class _ProcessingPageState extends State<ProcessingPage> {
     return Scaffold(
       body: Center(
         child: _success
-            ? Lottie.asset(
-                'assets/lotties/success.json',
-                width: 150,
-                repeat: false,
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Lottie.asset(
+                    'assets/lotties/success.json',
+                    width: context.screenWidth * .5,
+                    repeat: true,
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Planta registrada com sucesso!',
+                    style: context.textTheme.bodyLarge?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              )
+            : _notPlant
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Lottie.asset(
+                    'assets/lotties/info.json',
+                    width: context.screenWidth * .5,
+                    repeat: true,
+                  ),
+                  Text(
+                    _message,
+                    style: context.textTheme.bodyLarge?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               )
             : Column(
                 mainAxisSize: MainAxisSize.min,
@@ -81,7 +117,7 @@ class _ProcessingPageState extends State<ProcessingPage> {
                   const SizedBox(height: 20),
                   Text(
                     _message,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    style: context.textTheme.bodyLarge?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
