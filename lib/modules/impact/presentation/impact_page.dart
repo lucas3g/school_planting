@@ -118,6 +118,8 @@ class _ImpactPageState extends State<ImpactPage> {
               final oxygenPeople = (m.oxygen / 240).round();
               final avoidedKm = (m.carbon * 350 / 88).round();
               final waterTanks = (m.water / 200).round();
+              final beeVisits = m.totalPlantings * 80;
+              final purifiers = m.totalPlantings;
               return Padding(
                 padding: const EdgeInsets.all(AppThemeConstants.padding),
                 child: Column(
@@ -154,11 +156,15 @@ class _ImpactPageState extends State<ImpactPage> {
                       '${m.biodiversity.toStringAsFixed(1)} pts',
                       Icons.bug_report,
                       color: Colors.orange,
+                      description:
+                          'Atrai até $beeVisits visita${beeVisits == 1 ? '' : 's'} de abelhas por mês',
                     ),
                     _buildItem(
                       'Melhoria na qualidade do ar',
                       '${m.airQuality.toStringAsFixed(1)} pts',
                       Icons.air_outlined,
+                      description:
+                          'Equivale a usar $purifiers purificador${purifiers == 1 ? '' : 'es'} de ar por 24h',
                     ),
                   ],
                 ),
