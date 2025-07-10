@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 import 'package:school_planting/core/di/dependency_injection.dart';
 import 'package:school_planting/shared/components/app_circular_indicator_widget.dart';
 import 'package:school_planting/shared/components/custom_app_bar.dart';
 import 'package:school_planting/shared/themes/app_theme_constants.dart';
+import 'package:super_sliver_list/super_sliver_list.dart';
 
 import 'controller/impact_bloc.dart';
 import 'controller/impact_events.dart';
@@ -27,14 +27,6 @@ class _ImpactPageState extends State<ImpactPage> {
     _impactBloc.add(LoadImpactEvent());
   }
 
-  Widget _buildHeader() {
-    return Lottie.asset(
-      'assets/lotties/success.json',
-      height: 120,
-      repeat: false,
-    );
-  }
-
   @override
   void dispose() {
     _impactBloc.close();
@@ -48,7 +40,7 @@ class _ImpactPageState extends State<ImpactPage> {
     Color? color,
     String? description,
   }) {
-    final background = color?.withOpacity(0.15);
+    final background = color?.withAlpha((0.15 * 255).round());
 
     return Card(
       color: background,
@@ -88,16 +80,19 @@ class _ImpactPageState extends State<ImpactPage> {
   Widget _buildSummary(int count) {
     final String text =
         'Você já realizou $count ${count == 1 ? 'plantação' : 'plantações'}!\n\n Veja como isso ajuda o planeta:';
-    return Card(
-      margin: const EdgeInsets.only(bottom: AppThemeConstants.padding),
-      child: Padding(
-        padding: const EdgeInsets.all(AppThemeConstants.mediumPadding),
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+    return Expanded(
+      child: Card(
+        color: Colors.lightBlue.withAlpha((0.15 * 255).round()),
+        margin: const EdgeInsets.only(bottom: 10),
+        child: Padding(
+          padding: const EdgeInsets.all(AppThemeConstants.mediumPadding),
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );
@@ -133,9 +128,10 @@ class _ImpactPageState extends State<ImpactPage> {
 
               return Padding(
                 padding: const EdgeInsets.all(AppThemeConstants.padding),
-                child: Column(
+                child: SuperListView(
+                  shrinkWrap: true,
                   children: [
-                    _buildSummary(m.totalPlantings),
+                    Row(children: [_buildSummary(m.totalPlantings)]),
                     _buildItem(
                       'Oxigênio gerado',
                       '${m.oxygen.toStringAsFixed(1)} kg/ano',

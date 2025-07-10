@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:school_planting/core/domain/entities/tables_db.dart';
 import 'package:school_planting/modules/my_plantings/data/datasources/my_plantings_datasource_impl.dart';
 import 'package:school_planting/modules/my_plantings/domain/entities/my_planting_entity.dart';
 
@@ -18,7 +19,7 @@ void main() {
     test('fetchMyPlantings parses data', () async {
       when(
         client.select(
-          table: 'user_plantings_with_userinfo',
+          table: TablesDB.userInfoWithPlantings.name,
           columns:
               'description,image_url,lat,long,user_name,photourl,created_at',
           filters: {'user_id': '1'},
@@ -48,7 +49,7 @@ void main() {
       expect(result.first.imageUrl, 'url');
       verify(
         client.select(
-          table: 'user_plantings_with_userinfo',
+          table: TablesDB.userInfoWithPlantings.name,
           columns:
               'description,image_url,lat,long,user_name,photourl,created_at',
           filters: {'user_id': '1'},

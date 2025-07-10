@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:school_planting/core/data/clients/supabase/supabase_client_interface.dart';
+import 'package:school_planting/core/domain/entities/tables_db.dart';
 import 'package:school_planting/modules/home/domain/entities/planting_detail_entity.dart';
 
 import 'map_planting_datasource.dart';
@@ -15,7 +16,7 @@ class MapPlantingDatasourceImpl implements MapPlantingDatasource {
   Future<List<PlantingDetailEntity>> fetchPlantings() async {
     try {
       final List<dynamic> data = await _client.select(
-        table: 'user_plantings_with_userinfo',
+        table: TablesDB.userInfoWithPlantings.name,
         columns: 'description,image_url,lat,long,user_name,photourl,created_at',
       );
 

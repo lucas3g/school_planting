@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:school_planting/core/domain/entities/tables_db.dart';
 import 'package:school_planting/modules/impact/data/datasources/impact_datasource_impl.dart';
 
 import '../../helpers/mocks.dart';
@@ -17,7 +18,7 @@ void main() {
     test('countPlantings returns length', () async {
       when(
         client.select(
-          table: 'user_plantings',
+          table: TablesDB.plantings.name,
           columns: 'id',
           filters: {'user_id': '1'},
         ),
@@ -28,7 +29,7 @@ void main() {
       expect(result, 3);
       verify(
         client.select(
-          table: 'user_plantings',
+          table: TablesDB.plantings.name,
           columns: 'id',
           filters: {'user_id': '1'},
         ),

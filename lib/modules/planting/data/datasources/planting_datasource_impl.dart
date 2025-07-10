@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:injectable/injectable.dart';
 import 'package:school_planting/core/data/clients/supabase/supabase_client_interface.dart';
+import 'package:school_planting/core/domain/entities/tables_db.dart';
 import 'package:school_planting/shared/utils/image_utils.dart';
 
 import 'planting_datasource.dart';
@@ -31,7 +32,7 @@ class PlantingDatasourceImpl implements PlantingDatasource {
     );
 
     await _client.insert(
-      table: 'user_plantings',
+      table: TablesDB.plantings.name,
       data: {
         'user_id': userId,
         'description': description,

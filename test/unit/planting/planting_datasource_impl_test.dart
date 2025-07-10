@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:school_planting/core/domain/entities/tables_db.dart';
 import 'package:school_planting/modules/planting/data/datasources/planting_datasource_impl.dart';
 
 import '../../helpers/mocks.dart';
@@ -29,7 +30,7 @@ void main() {
       ).thenAnswer((_) async => {});
       when(
         client.insert(
-          table: 'user_plantings',
+          table: TablesDB.plantings.name,
           data: {
             'user_id': '1',
             'description': 'd',
@@ -58,7 +59,7 @@ void main() {
       ).called(1);
       verify(
         client.insert(
-          table: 'user_plantings',
+          table: TablesDB.plantings.name,
           data: {
             'user_id': '1',
             'description': 'd',

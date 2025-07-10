@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:school_planting/core/data/clients/supabase/supabase_client_interface.dart';
+import 'package:school_planting/core/domain/entities/tables_db.dart';
 import 'package:school_planting/modules/my_plantings/domain/entities/my_planting_entity.dart';
 
 import 'my_plantings_datasource.dart';
@@ -14,7 +15,7 @@ class MyPlantingsDatasourceImpl implements MyPlantingsDatasource {
   @override
   Future<List<MyPlantingEntity>> fetchMyPlantings(String userId) async {
     final List<dynamic> data = await _client.select(
-      table: 'user_plantings_with_userinfo',
+      table: TablesDB.userInfoWithPlantings.name,
       columns: 'description,image_url,lat,long,user_name,photourl,created_at',
       filters: {'user_id': userId},
       orderBy: 'created_at',
