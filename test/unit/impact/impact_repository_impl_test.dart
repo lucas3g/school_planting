@@ -25,6 +25,10 @@ void main() {
 
       verify(datasource.countPlantings('1')).called(1);
       expect(result.isRight, true);
+      result.get((_) => null, (data) {
+        expect(data.totalPlantings, 2);
+        return null;
+      });
     });
   });
 }
