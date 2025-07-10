@@ -3,18 +3,11 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
+import 'package:school_planting/core/constants/constants.dart';
 import 'package:school_planting/core/di/dependency_injection.config.dart';
 import 'package:school_planting/core/domain/entities/app_global.dart';
 import 'package:school_planting/core/domain/entities/usecase.dart';
 import 'package:school_planting/modules/auth/domain/usecases/auto_login.dart';
-import 'package:school_planting/core/data/clients/http/client_http.dart';
-import 'package:school_planting/modules/planting/data/datasources/plantnet_datasource.dart';
-import 'package:school_planting/modules/planting/data/datasources/plantnet_datasource_impl.dart';
-import 'package:school_planting/modules/planting/data/repositories/plantnet_repository_impl.dart';
-import 'package:school_planting/modules/planting/domain/repositories/plantnet_repository.dart';
-import 'package:school_planting/modules/planting/domain/usecases/validate_plant_image_usecase.dart';
-import 'package:school_planting/modules/planting/domain/usecases/create_planting_usecase.dart';
-import 'package:school_planting/modules/planting/presentation/controller/planting_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final GetIt getIt = GetIt.instance;
@@ -28,20 +21,6 @@ Future<void> configureDependencies() async {
   _initAppGlobal();
 
   await getIt.init();
-
-  getIt
-    ..registerFactory<PlantNetDatasource>(
-        () => PlantNetDatasourceImpl(client: getIt<ClientHttp>()))
-    ..registerFactory<PlantNetRepository>(
-        () => PlantNetRepositoryImpl(datasource: getIt<PlantNetDatasource>()))
-    ..registerFactory<ValidatePlantImageUseCase>(
-        () => ValidatePlantImageUseCase(repository: getIt<PlantNetRepository>()));
-
-  getIt.unregister<PlantingBloc>();
-  getIt.registerFactory<PlantingBloc>(() => PlantingBloc(
-        createPlantingUseCase: getIt<CreatePlantingUseCase>(),
-        validatePlantImageUseCase: getIt<ValidatePlantImageUseCase>(),
-      ));
 
   await _tryAutoLogin();
 }
@@ -57,6 +36,7 @@ abstract class RegisterModule {
 Dio _dioFactory() {
   final BaseOptions baseOptions = BaseOptions(
     headers: <String, dynamic>{'Content-Type': 'application/json'},
+    baseUrl: PLANTNET_BASE_URL,
   );
 
   return Dio(baseOptions);
