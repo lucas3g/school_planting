@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:school_planting/core/constants/constants.dart';
-import 'package:school_planting/core/di/dependency_injection.dart';
 import 'package:school_planting/core/domain/entities/app_global.dart';
 import 'package:school_planting/modules/planting/domain/entities/planting_entity.dart';
 import 'package:school_planting/shared/components/app_snackbar.dart';
@@ -15,6 +14,7 @@ import 'package:school_planting/shared/components/custom_button.dart';
 import 'package:school_planting/shared/components/text_form_field.dart';
 import 'package:school_planting/shared/themes/app_theme_constants.dart';
 import 'package:uuid/uuid.dart';
+
 import 'processing_page.dart';
 
 class PlantingPage extends StatefulWidget {
@@ -26,6 +26,8 @@ class PlantingPage extends StatefulWidget {
 
 class _PlantingPageState extends State<PlantingPage> {
   final TextEditingController _descController = TextEditingController();
+  final FocusNode _descFocusNode = FocusNode();
+
   final ImagePicker _picker = ImagePicker();
   File? _image;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -52,6 +54,8 @@ class _PlantingPageState extends State<PlantingPage> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
+
+    _descFocusNode.unfocus();
 
     if (_image == null) {
       showAppSnackbar(
@@ -92,6 +96,8 @@ class _PlantingPageState extends State<PlantingPage> {
       lat: position.latitude,
       long: position.longitude,
     );
+
+    if (!mounted) return;
 
     final result = await Navigator.push<bool>(
       context,
@@ -173,6 +179,7 @@ class _PlantingPageState extends State<PlantingPage> {
                           ),
                           const SizedBox(height: 10),
                           AppTextFormField(
+                            focusNode: _descFocusNode,
                             borderColor: Colors.white,
                             controller: _descController,
                             hint: 'Escreva sobre a planta',

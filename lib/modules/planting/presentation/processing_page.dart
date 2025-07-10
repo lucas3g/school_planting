@@ -42,26 +42,29 @@ class _ProcessingPageState extends State<ProcessingPage> {
     }
 
     setState(() => _message = 'Enviando registro para o servidor');
-    final result =
-        await create(CreatePlantingParams(entity: widget.entity, image: widget.image));
+    final result = await create(
+      CreatePlantingParams(entity: widget.entity, image: widget.image),
+    );
 
     if (!mounted) return;
 
-    result.get((failure) async {
-      setState(() => _message = failure.message);
-      await Future.delayed(const Duration(seconds: 2));
-      if (mounted) Navigator.pop(context, false);
-    }, (_) async {
-      setState(() => _success = true);
-      await Future.delayed(const Duration(seconds: 1));
-      if (mounted) Navigator.pop(context, true);
-    });
+    result.get(
+      (failure) async {
+        setState(() => _message = failure.message);
+        await Future.delayed(const Duration(seconds: 2));
+        if (mounted) Navigator.pop(context, false);
+      },
+      (_) async {
+        setState(() => _success = true);
+        await Future.delayed(const Duration(seconds: 1));
+        if (mounted) Navigator.pop(context, true);
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green,
       body: Center(
         child: _success
             ? Lottie.asset(
@@ -72,14 +75,16 @@ class _ProcessingPageState extends State<ProcessingPage> {
             : Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
+                  const CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
                   const SizedBox(height: 20),
                   Text(
                     _message,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge
-                        ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
