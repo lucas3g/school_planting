@@ -126,8 +126,7 @@ class _PlantingPageState extends State<PlantingPage> {
               animation: curved,
               builder: (context, child) {
                 return ClipRRect(
-                  borderRadius:
-                      BorderRadius.circular(20 * (1 - curved.value)),
+                  borderRadius: BorderRadius.circular(20 * (1 - curved.value)),
                   child: FractionallySizedBox(
                     heightFactor: curved.value,
                     widthFactor: 1.0,
