@@ -62,12 +62,22 @@ import '../../modules/planting/data/datasources/planting_datasource.dart'
     as _i155;
 import '../../modules/planting/data/datasources/planting_datasource_impl.dart'
     as _i64;
+import '../../modules/planting/data/datasources/plantnet_datasource.dart'
+    as _i743;
+import '../../modules/planting/data/datasources/plantnet_datasource_impl.dart'
+    as _i918;
 import '../../modules/planting/data/repositories/planting_repository_impl.dart'
     as _i631;
+import '../../modules/planting/data/repositories/plantnet_repository_impl.dart'
+    as _i944;
 import '../../modules/planting/domain/repositories/planting_repository.dart'
     as _i91;
+import '../../modules/planting/domain/repositories/plantnet_repository.dart'
+    as _i681;
 import '../../modules/planting/domain/usecases/create_planting_usecase.dart'
     as _i1045;
+import '../../modules/planting/domain/usecases/validate_plant_image_usecase.dart'
+    as _i237;
 import '../../modules/planting/presentation/controller/planting_bloc.dart'
     as _i97;
 import '../data/clients/http/client_http.dart' as _i777;
@@ -139,9 +149,17 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i817.AuthRepositoryImpl(authDatasource: gh<_i655.AuthDatasource>()),
     );
+    gh.factory<_i743.PlantNetDatasource>(
+      () => _i918.PlantNetDatasourceImpl(client: gh<_i777.ClientHttp>()),
+    );
     gh.factory<_i655.GetPlantingsUseCase>(
       () => _i655.GetPlantingsUseCase(
         repository: gh<_i56.MapPlantingRepository>(),
+      ),
+    );
+    gh.factory<_i681.PlantNetRepository>(
+      () => _i944.PlantNetRepositoryImpl(
+        datasource: gh<_i743.PlantNetDatasource>(),
       ),
     );
     gh.factory<_i182.PlantingsBloc>(
@@ -157,17 +175,17 @@ extension GetItInjectableX on _i174.GetIt {
         repository: gh<_i91.PlantingRepository>(),
       ),
     );
+    gh.factory<_i237.ValidatePlantImageUseCase>(
+      () => _i237.ValidatePlantImageUseCase(
+        repository: gh<_i681.PlantNetRepository>(),
+      ),
+    );
     gh.factory<_i682.ImpactRepository>(
       () => _i56.ImpactRepositoryImpl(datasource: gh<_i400.ImpactDatasource>()),
     );
     gh.factory<_i94.GetMyPlantingsUseCase>(
       () => _i94.GetMyPlantingsUseCase(
         repository: gh<_i1041.MyPlantingsRepository>(),
-      ),
-    );
-    gh.factory<_i97.PlantingBloc>(
-      () => _i97.PlantingBloc(
-        createPlantingUseCase: gh<_i1045.CreatePlantingUseCase>(),
       ),
     );
     gh.factory<_i25.GetImpactUseCase>(
@@ -195,6 +213,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i116.MyPlantingsBloc>(
       () => _i116.MyPlantingsBloc(usecase: gh<_i94.GetMyPlantingsUseCase>()),
+    );
+    gh.factory<_i97.PlantingBloc>(
+      () => _i97.PlantingBloc(
+        createPlantingUseCase: gh<_i1045.CreatePlantingUseCase>(),
+        validatePlantImageUseCase: gh<_i237.ValidatePlantImageUseCase>(),
+      ),
     );
     gh.factory<_i306.ImpactBloc>(
       () => _i306.ImpactBloc(usecase: gh<_i25.GetImpactUseCase>()),

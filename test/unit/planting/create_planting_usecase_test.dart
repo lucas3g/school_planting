@@ -23,8 +23,8 @@ void main() {
         description: '',
         imageName: '',
         userId: '',
-        latitude: 0,
-        longitude: 0,
+        lat: 0,
+        long: 0,
       );
       final file = File('test.txt');
 

@@ -13,9 +13,9 @@ class PlantingBloc extends Bloc<PlantingEvents, PlantingStates> {
   PlantingBloc({
     required CreatePlantingUseCase createPlantingUseCase,
     required ValidatePlantImageUseCase validatePlantImageUseCase,
-  })  : _createUseCase = createPlantingUseCase,
-        _validateUseCase = validatePlantImageUseCase,
-        super(PlantingInitialState()) {
+  }) : _createUseCase = createPlantingUseCase,
+       _validateUseCase = validatePlantImageUseCase,
+       super(PlantingInitialState()) {
     on<CreatePlantingEvent>(_onCreatePlanting);
   }
 
@@ -26,12 +26,11 @@ class PlantingBloc extends Bloc<PlantingEvents, PlantingStates> {
     emit(state.loading());
 
     final validation = await _validateUseCase(event.image);
-    if (validation.isLeft) {
-      return emit(state.failure(validation.left.message));
-    }
-    if (!validation.right) {
-      return emit(state.failure('Foto enviada não é uma planta, flor ou árvore'));
-    }
+
+    validation.get(
+      (failure) => emit(state.failure(failure.message)),
+      (_) => emit(state.success()),
+    );
 
     final result = await _createUseCase(
       CreatePlantingParams(entity: event.entity, image: event.image),

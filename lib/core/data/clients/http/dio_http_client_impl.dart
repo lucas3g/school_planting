@@ -140,4 +140,27 @@ class DioClientHttpImpl implements ClientHttp {
       throw _handleError(e);
     }
   }
+
+  @override
+  Future<HttpResponseEntity<T>> postFile<T>(String path, {Object? data}) async {
+    try {
+      final String url = path;
+
+      final Response<T> dioResponse = await _dio.post(
+        url,
+        data: data,
+        options: Options(
+          headers: {'Content-Type': 'multipart/form-data'},
+          contentType: 'multipart/form-data',
+        ),
+      );
+
+      return HttpResponseEntity<T>(
+        data: dioResponse.data,
+        statusCode: dioResponse.statusCode ?? 200,
+      );
+    } catch (e) {
+      throw _handleError(e);
+    }
+  }
 }

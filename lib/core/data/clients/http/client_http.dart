@@ -11,6 +11,8 @@ abstract class ClientHttp {
     Map<String, dynamic>? data,
   });
 
+  Future<HttpResponseEntity<T>> postFile<T>(String path, {Object? data});
+
   Future<HttpResponseEntity<T>> get<T>(String path);
 
   Future<HttpResponseEntity<T>> getImage<T>(String path);

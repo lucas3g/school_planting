@@ -26,8 +26,8 @@ class PlantingRepositoryImpl implements PlantingRepository {
         description: planting.description,
         image: image,
         imageName: planting.imageName,
-        lat: planting.latitude,
-        long: planting.longitude,
+        lat: planting.lat,
+        long: planting.long,
       );
       return resolve(const VoidSuccess());
     } on AppFailure catch (e) {

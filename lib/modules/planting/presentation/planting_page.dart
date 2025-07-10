@@ -125,8 +125,8 @@ class _PlantingPageState extends State<PlantingPage> {
       description: _descController.text,
       imageName: uuid,
       userId: AppGlobal.instance.user!.id.value,
-      latitude: position.latitude,
-      longitude: position.longitude,
+      lat: position.latitude,
+      long: position.longitude,
     );
 
     _bloc.add(CreatePlantingEvent(entity: entity, image: _image!));
