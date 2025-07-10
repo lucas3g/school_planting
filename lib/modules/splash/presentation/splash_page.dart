@@ -26,9 +26,17 @@ class _SplashPageState extends State<SplashPage> {
     if (!mounted) return;
 
     if (userLoggedLicenseActiveHasIpServer()) {
-      Navigator.pushReplacementNamed(context, NamedRoutes.home.route);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        NamedRoutes.home.route,
+        (route) => false,
+      );
     } else {
-      Navigator.pushReplacementNamed(context, NamedRoutes.auth.route);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        NamedRoutes.auth.route,
+        (route) => false,
+      );
     }
   }
 

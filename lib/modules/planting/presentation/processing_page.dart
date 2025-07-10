@@ -62,7 +62,13 @@ class _ProcessingPageState extends State<ProcessingPage> {
       (_) async {
         setState(() => _success = true);
         await Future.delayed(const Duration(milliseconds: 1500));
-        if (mounted) Navigator.popAndPushNamed(context, NamedRoutes.home.name);
+        if (mounted) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            NamedRoutes.home.name,
+            (_) => false,
+          );
+        }
       },
     );
   }
