@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:school_planting/core/constants/constants.dart';
 import 'package:school_planting/core/di/dependency_injection.dart';
+import 'package:school_planting/core/domain/entities/named_routes.dart';
 import 'package:school_planting/modules/planting/domain/entities/planting_entity.dart';
 import 'package:school_planting/modules/planting/domain/usecases/create_planting_usecase.dart';
 import 'package:school_planting/modules/planting/domain/usecases/validate_plant_image_usecase.dart';
@@ -61,7 +62,7 @@ class _ProcessingPageState extends State<ProcessingPage> {
       (_) async {
         setState(() => _success = true);
         await Future.delayed(const Duration(milliseconds: 1500));
-        if (mounted) Navigator.pop(context, true);
+        if (mounted) Navigator.popAndPushNamed(context, NamedRoutes.home.name);
       },
     );
   }
