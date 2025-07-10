@@ -14,6 +14,7 @@ import 'package:school_planting/shared/components/custom_app_bar.dart';
 import 'package:school_planting/shared/components/custom_button.dart';
 import 'package:school_planting/shared/components/text_form_field.dart';
 import 'package:school_planting/shared/themes/app_theme_constants.dart';
+import 'package:animations/animations.dart';
 import 'package:uuid/uuid.dart';
 
 import 'processing_page.dart';
@@ -33,6 +34,8 @@ class _PlantingPageState extends State<PlantingPage> {
   File? _image;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey _saveButtonKey = GlobalKey();
+  PlantingEntity? _processingEntity;
+  File? _processingImage;
 
   @override
   void initState() {
@@ -59,7 +62,7 @@ class _PlantingPageState extends State<PlantingPage> {
     }
   }
 
-  Future<void> _save() async {
+  Future<void> _save(VoidCallback openContainer) async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -108,43 +111,12 @@ class _PlantingPageState extends State<PlantingPage> {
 
     if (!mounted) return;
 
-    final result = await Navigator.push<bool>(
-      context,
-      PageRouteBuilder(
-        transitionDuration: const Duration(milliseconds: 500),
-        pageBuilder: (_, __, ___) =>
-            ProcessingPage(entity: entity, image: _image!),
-        transitionsBuilder: (context, animation, __, child) {
-          final curved = CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeInOut,
-          );
+    setState(() {
+      _processingEntity = entity;
+      _processingImage = _image!;
+    });
 
-          return Align(
-            alignment: Alignment.bottomCenter,
-            child: AnimatedBuilder(
-              animation: curved,
-              builder: (context, child) {
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(20 * (1 - curved.value)),
-                  child: FractionallySizedBox(
-                    heightFactor: curved.value,
-                    widthFactor: 1.0,
-                    alignment: Alignment.bottomCenter,
-                    child: child,
-                  ),
-                );
-              },
-              child: child,
-            ),
-          );
-        },
-      ),
-    );
-
-    if (result == true && mounted) {
-      Navigator.pop(context);
-    }
+    openContainer();
   }
 
   Widget _buildButtonLabel() {
@@ -178,11 +150,28 @@ class _PlantingPageState extends State<PlantingPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Divider(),
-            AppCustomButton(
-              buttonKey: _saveButtonKey,
-              expands: true,
-              onPressed: _save,
-              label: _buildButtonLabel(),
+            OpenContainer<bool>(
+              transitionDuration: const Duration(milliseconds: 500),
+              tappable: false,
+              openBuilder: (context, _) {
+                return ProcessingPage(
+                  entity: _processingEntity!,
+                  image: _processingImage!,
+                );
+              },
+              onClosed: (result) {
+                if (result == true && mounted) {
+                  Navigator.pop(context);
+                }
+              },
+              closedBuilder: (context, openContainer) {
+                return AppCustomButton(
+                  buttonKey: _saveButtonKey,
+                  expands: true,
+                  onPressed: () => _save(openContainer),
+                  label: _buildButtonLabel(),
+                );
+              },
             ),
           ],
         ),
