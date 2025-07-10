@@ -31,6 +31,7 @@ class _PlantingPageState extends State<PlantingPage> {
   final ImagePicker _picker = ImagePicker();
   File? _image;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey _saveButtonKey = GlobalKey();
 
   @override
   void initState() {
@@ -99,10 +100,28 @@ class _PlantingPageState extends State<PlantingPage> {
 
     if (!mounted) return;
 
+    final RenderBox box =
+        _saveButtonKey.currentContext!.findRenderObject() as RenderBox;
+    final Offset position = box.localToGlobal(box.size.center(Offset.zero));
+    final Size screen = MediaQuery.of(context).size;
+    final Alignment alignment = Alignment(
+      (position.dx / screen.width) * 2 - 1,
+      (position.dy / screen.height) * 2 - 1,
+    );
+
     final result = await Navigator.push<bool>(
       context,
-      MaterialPageRoute(
-        builder: (_) => ProcessingPage(entity: entity, image: _image!),
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 500),
+        pageBuilder: (_, __, ___) => ProcessingPage(entity: entity, image: _image!),
+        transitionsBuilder: (_, animation, __, child) {
+          final curved = CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
+          return ScaleTransition(
+            scale: curved,
+            alignment: alignment,
+            child: child,
+          );
+        },
       ),
     );
 
@@ -143,6 +162,7 @@ class _PlantingPageState extends State<PlantingPage> {
           children: [
             Divider(),
             AppCustomButton(
+              buttonKey: _saveButtonKey,
               expands: true,
               onPressed: _save,
               label: _buildButtonLabel(),
