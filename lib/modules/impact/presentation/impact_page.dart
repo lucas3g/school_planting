@@ -65,8 +65,8 @@ class _ImpactPageState extends State<ImpactPage> {
                 Text(
                   value,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -94,14 +94,13 @@ class _ImpactPageState extends State<ImpactPage> {
         child: Text(
           text,
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +122,6 @@ class _ImpactPageState extends State<ImpactPage> {
                 padding: const EdgeInsets.all(AppThemeConstants.padding),
                 child: Column(
                   children: [
-                    _buildHeader(),
                     _buildSummary(m.totalPlantings),
                     _buildItem(
                       'Oxigênio gerado',
@@ -149,8 +147,7 @@ class _ImpactPageState extends State<ImpactPage> {
                       '${m.water.toStringAsFixed(1)} L/ano',
                       Icons.water_drop,
                       color: Colors.blue,
-                      description:
-                          '$waterTanks caixa(s) d\'água de reserva',
+                      description: '$waterTanks caixa(s) d\'água de reserva',
                     ),
                     _buildItem(
                       'Biodiversidade (ex: abelhas e polinizadores)',
