@@ -71,7 +71,7 @@ class _MyPlantingsPageState extends State<MyPlantingsPage> {
               }
 
               return SuperListView.separated(
-                cacheExtent: 1000,
+                cacheExtent: 3000,
                 padding: const EdgeInsets.all(AppThemeConstants.padding),
                 itemCount: state.plantings.length,
                 separatorBuilder: (context, index) =>

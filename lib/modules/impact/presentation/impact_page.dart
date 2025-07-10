@@ -119,15 +119,17 @@ class _ImpactPageState extends State<ImpactPage> {
               final m = state.metrics;
               final oxygenPeople = (m.oxygen / 240).round();
               final avoidedKm = (m.carbon * 350 / 88).round();
-              final waterTanks = (m.water / 200);
+              final waterTanks = (m.water / 200).round();
               final beeVisits = (m.totalPlantings * 16);
-              final purifiers = (m.totalPlantings / 5);
+              final purifiers = (m.totalPlantings / 5).round();
 
               String textTemp = m.temperature <= 0.3
                   ? 'Reduz a sensação térmica ao redor da planta'
                   : m.temperature >= 0.4 && m.temperature <= 0.6
                   ? 'Equivale à sombra de uma árvore em dia quente'
-                  : 'Ajuda a refrescar o ambiente como 1 ventilador';
+                  : m.temperature >= 0.6 && m.temperature <= 9
+                  ? 'Ajuda a refrescar o ambiente como 1 ventilador'
+                  : 'Ajuda a refrescar o ambiente como 1 ar-condicionado';
 
               return Padding(
                 padding: const EdgeInsets.all(AppThemeConstants.padding),

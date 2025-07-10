@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:school_planting/core/constants/constants.dart';
 import 'package:school_planting/core/domain/entities/app_assets.dart';
 import 'package:school_planting/core/domain/entities/app_global.dart';
@@ -34,6 +35,13 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
+
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.light, // Para iOS
+      ),
+    );
 
     _init();
   }

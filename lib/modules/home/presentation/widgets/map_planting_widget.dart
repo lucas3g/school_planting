@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -41,7 +42,15 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
   void initState() {
     super.initState();
 
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light, // Para iOS
+      ),
+    );
+
     _getCurrentLocation();
+
     _platingBloc.add(LoadPlantingsEvent());
 
     _listenPlantingStates();
@@ -148,6 +157,13 @@ class _MapPlantingWidgetState extends State<MapPlantingWidget> {
                 mapController.animateCamera(
                   CameraUpdate.newCameraPosition(
                     CameraPosition(target: _currentPosition!, zoom: 18),
+                  ),
+                );
+
+                SystemChrome.setSystemUIOverlayStyle(
+                  const SystemUiOverlayStyle(
+                    statusBarIconBrightness: Brightness.dark,
+                    statusBarBrightness: Brightness.light, // Para iOS
                   ),
                 );
               } else {

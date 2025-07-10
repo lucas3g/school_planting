@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:school_planting/core/constants/constants.dart';
 import 'package:school_planting/core/di/dependency_injection.dart';
@@ -65,6 +66,13 @@ class _AuthPageState extends State<AuthPage> {
   @override
   void initState() {
     super.initState();
+
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.light, // Para iOS
+      ),
+    );
 
     _listenAuthStates();
   }

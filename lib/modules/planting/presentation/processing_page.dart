@@ -8,6 +8,7 @@ import 'package:school_planting/core/di/dependency_injection.dart';
 import 'package:school_planting/modules/planting/domain/entities/planting_entity.dart';
 import 'package:school_planting/modules/planting/domain/usecases/create_planting_usecase.dart';
 import 'package:school_planting/modules/planting/domain/usecases/validate_plant_image_usecase.dart';
+import 'package:school_planting/shared/components/app_circular_indicator_widget.dart';
 
 class ProcessingPage extends StatefulWidget {
   final PlantingEntity entity;
@@ -21,7 +22,6 @@ class ProcessingPage extends StatefulWidget {
 class _ProcessingPageState extends State<ProcessingPage> {
   String _message = 'verificando imagem';
   bool _success = false;
-  bool _notPlant = false;
 
   @override
   void initState() {
@@ -39,7 +39,6 @@ class _ProcessingPageState extends State<ProcessingPage> {
       if (!mounted) return;
       setState(() {
         _message = 'Imagem enviada não é uma planta';
-        _notPlant = true;
       });
       await Future.delayed(const Duration(seconds: 2));
       if (mounted) Navigator.pop(context, false);
@@ -90,32 +89,10 @@ class _ProcessingPageState extends State<ProcessingPage> {
                   ),
                 ],
               )
-            : _notPlant
-            ? Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Lottie.asset(
-                    'assets/lotties/info.json',
-                    width: context.screenWidth * .5,
-                    repeat: true,
-                  ),
-                  Text(
-                    _message,
-                    style: context.textTheme.bodyLarge?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              )
             : Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Lottie.asset(
-                    'assets/lotties/barcode.json',
-                    width: context.screenWidth * .5,
-                    repeat: true,
-                  ),
+                  AppCircularIndicatorWidget(),
                   const SizedBox(height: 20),
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 500),
@@ -131,10 +108,7 @@ class _ProcessingPageState extends State<ProcessingPage> {
                       }
                       return SlideTransition(
                         position: offsetAnimation,
-                        child: FadeTransition(
-                          opacity: animation,
-                          child: child,
-                        ),
+                        child: FadeTransition(opacity: animation, child: child),
                       );
                     },
                     child: Text(

@@ -27,9 +27,9 @@ class DialogViewImageWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 child: CachedNetworkImage(
                   imageUrl: path,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fitHeight,
                   filterQuality: FilterQuality.high,
-                  height: context.screenHeight * .25,
+                  height: context.screenHeight * .8,
                   width: context.screenWidth,
                 ),
               ),
