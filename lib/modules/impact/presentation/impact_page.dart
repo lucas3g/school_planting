@@ -61,27 +61,27 @@ class _ImpactPageState extends State<ImpactPage> {
                 child: Column(
                   children: [
                     _buildItem(
-                      'Oxig\u00eanio gerado',
+                      'Oxigênio gerado',
                       m.oxygen.toStringAsFixed(1),
                       Icons.air,
                     ),
                     _buildItem(
-                      'Carbono sequestrado (CO\u2082)',
+                      'Carbono sequestrado (CO₂)',
                       m.carbon.toStringAsFixed(1),
                       Icons.co2,
                     ),
                     _buildItem(
-                      'Redu\u00e7\u00e3o de temperatura',
+                      'Redução de temperatura',
                       m.temperature.toStringAsFixed(1),
                       Icons.thermostat,
                     ),
                     _buildItem(
-                      'Reten\u00e7\u00e3o de \u00e1gua e solo',
+                      'Retenção de água e solo',
                       m.water.toStringAsFixed(1),
                       Icons.water_drop,
                     ),
                     _buildItem(
-                      'Biodiversidade',
+                      'Biodiversidade (ex: abelhas e polinizadores)',
                       m.biodiversity.toStringAsFixed(1),
                       Icons.bug_report,
                     ),
