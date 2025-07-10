@@ -6,6 +6,8 @@ const double kPadding = 20;
 
 const SUPABASE_URL = String.fromEnvironment('SUPABASE_URL');
 const SUPABASE_ANON_KEY = String.fromEnvironment('SUPABASE_ANON_KEY');
+const PLANTNET_BASE_URL = String.fromEnvironment('PLANTNET_BASE_URL');
+const PLANTNET_API_KEY = String.fromEnvironment('PLANTNET_API_KEY');
 
 extension ContextExtensions on BuildContext {
   ColorScheme get myTheme => Theme.of(this).colorScheme;
