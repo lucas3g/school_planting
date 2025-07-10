@@ -113,7 +113,7 @@ class _PlantingPageState extends State<PlantingPage> {
 
     if (!mounted) return;
 
-    await Navigator.push(
+    final bool? result = await Navigator.push(
       context,
       PageRouteBuilder(
         pageBuilder: (_, __, ___) => ProcessingPage(
@@ -128,6 +128,12 @@ class _PlantingPageState extends State<PlantingPage> {
     );
 
     setState(() => isExpanding = false);
+
+    if (!mounted) return;
+
+    if (result == true) {
+      Navigator.pop(context);
+    }
   }
 
   Widget _buildButtonLabel() {
