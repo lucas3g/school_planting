@@ -116,7 +116,9 @@ class _ImpactPageState extends State<ImpactPage> {
               final avoidedKm = (m.carbon * 350 / 88).round();
               final waterTanks = (m.water / 200).round();
               final beeVisits = (m.totalPlantings * 16);
-              final purifiers = (m.totalPlantings / 5).round();
+              final purifiers = (m.totalPlantings / 5).round() == 0
+                  ? 1
+                  : (m.totalPlantings / 5).round();
 
               String textTemp = m.temperature <= 0.3
                   ? 'Reduz a sensação térmica ao redor da planta'

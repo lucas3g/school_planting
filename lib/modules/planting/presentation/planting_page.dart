@@ -54,7 +54,11 @@ class _PlantingPageState extends State<PlantingPage> {
   }
 
   Future<void> _takePhoto() async {
-    final XFile? picked = await _picker.pickImage(source: ImageSource.camera);
+    final XFile? picked = await _picker.pickImage(
+      source: ImageSource.camera,
+      preferredCameraDevice: CameraDevice.rear,
+    );
+
     if (picked != null) {
       setState(() => _image = File(picked.path));
     }
