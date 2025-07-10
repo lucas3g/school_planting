@@ -38,14 +38,17 @@ class _ImpactPageState extends State<ImpactPage> {
       child: ListTile(
         leading: Icon(icon),
         title: Text(label),
-        trailing: Text(value),
+        trailing: Text(
+          value,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
 
   Widget _buildSummary(int count) {
     final String text =
-        'Você já realizou $count ${count == 1 ? 'plantação' : 'plantações'}!';
+        'Você já realizou $count ${count == 1 ? 'plantação' : 'plantações'}! Veja como isso ajuda o planeta:';
     return Card(
       margin: const EdgeInsets.only(bottom: AppThemeConstants.padding),
       child: Padding(
@@ -82,32 +85,32 @@ class _ImpactPageState extends State<ImpactPage> {
                       _buildSummary(m.totalPlantings),
                     _buildItem(
                       'Oxigênio gerado',
-                      m.oxygen.toStringAsFixed(1),
+                      '${m.oxygen.toStringAsFixed(1)} kg/ano',
                       Icons.air,
                     ),
                     _buildItem(
                       'Carbono capturado (CO₂)',
-                      m.carbon.toStringAsFixed(1),
+                      '${m.carbon.toStringAsFixed(1)} kg/ano',
                       Icons.co2,
                     ),
                     _buildItem(
                       'Redução de temperatura',
-                      m.temperature.toStringAsFixed(1),
+                      '${m.temperature.toStringAsFixed(1)} °C',
                       Icons.thermostat,
                     ),
                     _buildItem(
                       'Retenção de água e solo',
-                      m.water.toStringAsFixed(1),
+                      '${m.water.toStringAsFixed(1)} L/ano',
                       Icons.water_drop,
                     ),
                     _buildItem(
                       'Biodiversidade (ex: abelhas e polinizadores)',
-                      m.biodiversity.toStringAsFixed(1),
+                      '${m.biodiversity.toStringAsFixed(1)} pts',
                       Icons.bug_report,
                     ),
                     _buildItem(
                       'Melhoria na qualidade do ar',
-                      m.airQuality.toStringAsFixed(1),
+                      '${m.airQuality.toStringAsFixed(1)} pts',
                       Icons.air_outlined,
                     ),
                   ],
