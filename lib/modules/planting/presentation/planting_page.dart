@@ -84,7 +84,7 @@ class _PlantingPageState extends State<PlantingPage> {
       return;
     }
 
-    final position = await Geolocator.getCurrentPosition(
+    final myPosition = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
 
@@ -94,8 +94,8 @@ class _PlantingPageState extends State<PlantingPage> {
       description: _descController.text,
       imageName: uuid,
       userId: AppGlobal.instance.user!.id.value,
-      lat: position.latitude,
-      long: position.longitude,
+      lat: myPosition.latitude,
+      long: myPosition.longitude,
     );
 
     if (!mounted) return;
@@ -113,9 +113,13 @@ class _PlantingPageState extends State<PlantingPage> {
       context,
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 500),
-        pageBuilder: (_, __, ___) => ProcessingPage(entity: entity, image: _image!),
+        pageBuilder: (_, __, ___) =>
+            ProcessingPage(entity: entity, image: _image!),
         transitionsBuilder: (_, animation, __, child) {
-          final curved = CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
+          final curved = CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOutCubic,
+          );
           return ScaleTransition(
             scale: curved,
             alignment: alignment,
