@@ -150,41 +150,81 @@ class _CardUserWidgetState extends State<CardUserWidget> {
               AppThemeConstants.largeBorderRadius,
             ),
           ),
-          child: Row(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              CircleAvatar(
-                radius: 25,
-                backgroundImage: NetworkImage(
-                  AppGlobal.instance.user!.imageUrl.value,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  AppGlobal.instance.user!.name.value,
-                  style: context.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 25,
+                    backgroundImage: NetworkImage(
+                      AppGlobal.instance.user!.imageUrl.value,
+                    ),
                   ),
-                ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      AppGlobal.instance.user!.name.value,
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  BlocBuilder<AuthBloc, AuthStates>(
+                    bloc: _authBloc,
+                    builder: (context, states) {
+                      return _handleButtonLogout(states);
+                    },
+                  ),
+                ],
               ),
-              IconButton(
-                icon: const Icon(Icons.list, color: Colors.white),
-                onPressed: () {
-                  Navigator.pushNamed(context, NamedRoutes.myPlantings.route);
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.eco, color: Colors.white),
-                onPressed: () {
-                  Navigator.pushNamed(context, NamedRoutes.impact.route);
-                },
-              ),
-              BlocBuilder<AuthBloc, AuthStates>(
-                bloc: _authBloc,
-                builder: (context, states) {
-                  return _handleButtonLogout(states);
-                },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.list, color: Colors.white),
+                      TextButton(
+                        child: Text(
+                          'Plantações',
+                          style: context.textTheme.bodyLarge?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            NamedRoutes.myPlantings.route,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.eco, color: Colors.white),
+                      TextButton(
+                        child: Text(
+                          'Impacto',
+                          style: context.textTheme.bodyLarge?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            NamedRoutes.impact.route,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),

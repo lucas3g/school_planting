@@ -114,13 +114,21 @@ class _ImpactPageState extends State<ImpactPage> {
             if (state is ImpactLoadingState) {
               return const Center(child: AppCircularIndicatorWidget());
             }
+
             if (state is ImpactSuccessState) {
               final m = state.metrics;
               final oxygenPeople = (m.oxygen / 240).round();
               final avoidedKm = (m.carbon * 350 / 88).round();
-              final waterTanks = (m.water / 200).round();
+              final waterTanks = (m.water / 200);
               final beeVisits = (m.totalPlantings * 16);
               final purifiers = (m.totalPlantings / 5);
+
+              String textTemp = m.temperature <= 0.3
+                  ? 'Reduz a sensação térmica ao redor da planta'
+                  : m.temperature >= 0.4 && m.temperature <= 0.6
+                  ? 'Equivale à sombra de uma árvore em dia quente'
+                  : 'Ajuda a refrescar o ambiente como 1 ventilador';
+
               return Padding(
                 padding: const EdgeInsets.all(AppThemeConstants.padding),
                 child: Column(
@@ -132,25 +140,28 @@ class _ImpactPageState extends State<ImpactPage> {
                       Icons.air,
                       color: Colors.green,
                       description:
-                          'Oxigênio para $oxygenPeople pessoas por 2 anos',
+                          'Oxigênio para $oxygenPeople pessoas por 2 anos.',
                     ),
                     _buildItem(
                       'Carbono capturado (CO₂)',
                       '${m.carbon.toStringAsFixed(1)} kg/ano',
                       Icons.co2,
-                      description: '$avoidedKm km de carro evitados',
+                      color: Colors.grey,
+                      description: '$avoidedKm km de carro evitados.',
                     ),
                     _buildItem(
                       'Redução de temperatura',
                       '${m.temperature.toStringAsFixed(1)} °C',
+                      color: Colors.cyan,
                       Icons.thermostat,
+                      description: textTemp,
                     ),
                     _buildItem(
                       'Retenção de água e solo',
                       '${m.water.toStringAsFixed(1)} L/ano',
                       Icons.water_drop,
                       color: Colors.blue,
-                      description: '$waterTanks caixa(s) d\'água de reserva',
+                      description: '$waterTanks caixa(s) d\'água de reserva.',
                     ),
                     _buildItem(
                       'Biodiversidade (ex: abelhas e polinizadores)',
@@ -158,14 +169,15 @@ class _ImpactPageState extends State<ImpactPage> {
                       Icons.bug_report,
                       color: Colors.orange,
                       description:
-                          'Atrai até $beeVisits visita${beeVisits == 1 ? '' : 's'} de abelhas por mês',
+                          'Atrai até $beeVisits visita${beeVisits == 1 ? '' : 's'} de abelhas por mês.',
                     ),
                     _buildItem(
                       'Melhoria na qualidade do ar',
                       '${m.airQuality.toStringAsFixed(1)} pts',
                       Icons.air_outlined,
+                      color: Colors.blueGrey,
                       description:
-                          'Equivale a usar $purifiers purificador${purifiers == 1 ? '' : 'es'} de ar por 24h',
+                          'Equivale a usar $purifiers purificador${purifiers == 1 ? '' : 'es'} de ar por 24h.',
                     ),
                   ],
                 ),
