@@ -11,6 +11,7 @@ class AppCustomButton extends StatelessWidget {
   final Function()? onPressed;
   final bool expands;
   final double height;
+  final Key? buttonKey;
   Color? backgroundColor;
   double radius;
 
@@ -21,6 +22,7 @@ class AppCustomButton extends StatelessWidget {
     required this.onPressed,
     this.expands = false,
     this.height = 40,
+    this.buttonKey,
     this.backgroundColor,
     this.radius = AppThemeConstants.mediumBorderRadius,
   });
@@ -31,6 +33,7 @@ class AppCustomButton extends StatelessWidget {
 
     return icon != null
         ? ElevatedButton.icon(
+            key: buttonKey,
             onPressed: onPressed,
             style: ElevatedButton.styleFrom(
               backgroundColor: backgroundColor,
@@ -46,6 +49,7 @@ class AppCustomButton extends StatelessWidget {
             label: label,
           )
         : ElevatedButton(
+            key: buttonKey,
             onPressed: onPressed,
             style: ElevatedButton.styleFrom(
               backgroundColor: backgroundColor,
