@@ -3,23 +3,19 @@ import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:school_planting/core/constants/constants.dart';
 import 'package:school_planting/core/di/dependency_injection.dart';
 import 'package:school_planting/core/domain/entities/app_global.dart';
 import 'package:school_planting/modules/planting/domain/entities/planting_entity.dart';
-import 'package:school_planting/modules/planting/presentation/controller/planting_bloc.dart';
-import 'package:school_planting/modules/planting/presentation/controller/planting_events.dart';
-import 'package:school_planting/modules/planting/presentation/controller/planting_states.dart';
-import 'package:school_planting/shared/components/app_circular_indicator_widget.dart';
 import 'package:school_planting/shared/components/app_snackbar.dart';
 import 'package:school_planting/shared/components/custom_app_bar.dart';
 import 'package:school_planting/shared/components/custom_button.dart';
 import 'package:school_planting/shared/components/text_form_field.dart';
 import 'package:school_planting/shared/themes/app_theme_constants.dart';
 import 'package:uuid/uuid.dart';
+import 'processing_page.dart';
 
 class PlantingPage extends StatefulWidget {
   const PlantingPage({super.key});
@@ -29,52 +25,20 @@ class PlantingPage extends StatefulWidget {
 }
 
 class _PlantingPageState extends State<PlantingPage> {
-  final PlantingBloc _bloc = getIt<PlantingBloc>();
   final TextEditingController _descController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   File? _image;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  StreamSubscription<PlantingStates>? _plantingSub;
-
   @override
   void initState() {
     super.initState();
-
-    _listenPlantingStates();
   }
 
   @override
   void dispose() {
     _descController.dispose();
-    _plantingSub?.cancel();
     super.dispose();
-  }
-
-  void _listenPlantingStates() {
-    _plantingSub = _bloc.stream.listen((state) {
-      if (state is PlantingSuccessState) {
-        if (!mounted) return;
-
-        showAppSnackbar(
-          context,
-          title: 'Sucesso',
-          message: 'Plantação registrada',
-          type: TypeSnack.success,
-        );
-        Navigator.pop(context);
-      }
-      if (state is PlantingFailureState) {
-        if (!mounted) return;
-
-        showAppSnackbar(
-          context,
-          title: 'Erro',
-          message: state.message,
-          type: TypeSnack.error,
-        );
-      }
-    });
   }
 
   Future<void> _takePhoto() async {
@@ -129,18 +93,23 @@ class _PlantingPageState extends State<PlantingPage> {
       long: position.longitude,
     );
 
-    _bloc.add(CreatePlantingEvent(entity: entity, image: _image!));
+    final result = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ProcessingPage(entity: entity, image: _image!),
+      ),
+    );
+
+    if (result == true && mounted) {
+      Navigator.pop(context);
+    }
   }
 
-  Widget _handleButtonState(PlantingStates state) {
-    if (state is PlantingLoadingState) {
-      return const AppCircularIndicatorWidget(size: 20);
-    }
-
+  Widget _buildButtonLabel() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.save, size: 20, color: Colors.white),
+        const Icon(Icons.save, size: 20, color: Colors.white),
         const SizedBox(width: 10),
         Text(
           'Salvar plantação',
@@ -167,15 +136,10 @@ class _PlantingPageState extends State<PlantingPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Divider(),
-            BlocBuilder<PlantingBloc, PlantingStates>(
-              bloc: _bloc,
-              builder: (context, state) {
-                return AppCustomButton(
-                  expands: true,
-                  onPressed: _save,
-                  label: _handleButtonState(state),
-                );
-              },
+            AppCustomButton(
+              expands: true,
+              onPressed: _save,
+              label: _buildButtonLabel(),
             ),
           ],
         ),
