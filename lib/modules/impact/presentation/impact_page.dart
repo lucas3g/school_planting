@@ -66,7 +66,7 @@ class _ImpactPageState extends State<ImpactPage> {
                       Icons.air,
                     ),
                     _buildItem(
-                      'Carbono sequestrado (CO₂)',
+                      'Carbono capturado (CO₂)',
                       m.carbon.toStringAsFixed(1),
                       Icons.co2,
                     ),
