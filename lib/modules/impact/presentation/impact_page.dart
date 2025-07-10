@@ -49,6 +49,7 @@ class _ImpactPageState extends State<ImpactPage> {
     String? description,
   }) {
     final background = color?.withOpacity(0.15);
+
     return Card(
       color: background,
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -86,7 +87,7 @@ class _ImpactPageState extends State<ImpactPage> {
 
   Widget _buildSummary(int count) {
     final String text =
-        'Você já realizou $count ${count == 1 ? 'plantação' : 'plantações'}! Veja como isso ajuda o planeta:';
+        'Você já realizou $count ${count == 1 ? 'plantação' : 'plantações'}!\n\n Veja como isso ajuda o planeta:';
     return Card(
       margin: const EdgeInsets.only(bottom: AppThemeConstants.padding),
       child: Padding(
@@ -118,8 +119,8 @@ class _ImpactPageState extends State<ImpactPage> {
               final oxygenPeople = (m.oxygen / 240).round();
               final avoidedKm = (m.carbon * 350 / 88).round();
               final waterTanks = (m.water / 200).round();
-              final beeVisits = m.totalPlantings * 80;
-              final purifiers = m.totalPlantings;
+              final beeVisits = (m.totalPlantings * 16);
+              final purifiers = (m.totalPlantings / 5);
               return Padding(
                 padding: const EdgeInsets.all(AppThemeConstants.padding),
                 child: Column(
