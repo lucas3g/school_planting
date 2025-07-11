@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "664527003731-6cqhd5ou403p762uoiid7t3ugvkm36nu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.maktub.greenmap",
+            "certificate_hash": "c724b73d830178dd05d95937d4914d4fb1c3707f"
+          }
+        },
+        {
           "client_id": "664527003731-9h77hcpnh28qqhbt6dd01ejmd406ah7p.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
