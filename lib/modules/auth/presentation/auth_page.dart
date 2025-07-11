@@ -36,6 +36,10 @@ class _AuthPageState extends State<AuthPage> {
         Navigator.pushReplacementNamed(context, NamedRoutes.home.route);
       }
       if (state is AuthFailureState) {
+        if (state.message.contains('Cancelled by user')) {
+          return; // Usuário cancelou o login, não exibe snackbar
+        }
+
         if (!mounted) return;
 
         showAppSnackbar(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:school_planting/core/constants/constants.dart';
 import 'package:school_planting/core/di/dependency_injection.dart';
+import 'package:school_planting/modules/impact/domain/entities/impact_metric.dart';
 import 'package:school_planting/shared/components/app_circular_indicator_widget.dart';
 import 'package:school_planting/shared/components/custom_app_bar.dart';
 import 'package:school_planting/shared/themes/app_theme_constants.dart';
@@ -54,7 +56,14 @@ class _ImpactPageState extends State<ImpactPage> {
               children: [
                 Icon(icon, color: color),
                 const SizedBox(width: AppThemeConstants.mediumPadding),
-                Expanded(child: Text(label)),
+                Expanded(
+                  child: Text(
+                    label,
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
                 Text(
                   value,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -112,21 +121,16 @@ class _ImpactPageState extends State<ImpactPage> {
 
             if (state is ImpactSuccessState) {
               final m = state.metrics;
-              final oxygenPeople = (m.oxygen / 240).round();
-              final avoidedKm = (m.carbon * 350 / 88).round();
-              final waterTanks = (m.water / 200).round();
-              final beeVisits = (m.totalPlantings * 16);
-              final purifiers = (m.totalPlantings / 5).round() == 0
-                  ? 1
-                  : (m.totalPlantings / 5).round();
 
-              String textTemp = m.temperature <= 0.3
-                  ? 'Reduz a sensação térmica ao redor da planta'
-                  : m.temperature >= 0.4 && m.temperature <= 0.6
-                  ? 'Equivale à sombra de uma árvore em dia quente'
-                  : m.temperature >= 0.6 && m.temperature <= 9
-                  ? 'Ajuda a refrescar o ambiente como 1 ventilador'
-                  : 'Ajuda a refrescar o ambiente como 1 ar-condicionado';
+              final metrics = ImpactMetrics(
+                oxygen: m.oxygen,
+                carbon: m.carbon,
+                water: m.water,
+                temperature: m.temperature,
+                totalPlantings: m.totalPlantings,
+              );
+
+              final formatter = ImpactMetricsFormatter(metrics);
 
               return Padding(
                 padding: const EdgeInsets.all(AppThemeConstants.padding),
@@ -140,28 +144,30 @@ class _ImpactPageState extends State<ImpactPage> {
                       Icons.air,
                       color: Colors.green,
                       description:
-                          'Oxigênio para $oxygenPeople pessoas por 2 anos.',
+                          'Oxigênio para ${formatter.oxygenPeople} pessoas por 2 anos.',
                     ),
                     _buildItem(
                       'Carbono capturado (CO₂)',
                       '${m.carbon.toStringAsFixed(1)} kg/ano',
                       Icons.co2,
                       color: Colors.grey,
-                      description: '$avoidedKm km de carro evitados.',
+                      description:
+                          '${formatter.avoidedKm} km de carro evitados.',
                     ),
                     _buildItem(
                       'Redução de temperatura',
                       '${m.temperature.toStringAsFixed(1)} °C',
                       color: Colors.cyan,
                       Icons.thermostat,
-                      description: textTemp,
+                      description: formatter.temperatureImpact,
                     ),
                     _buildItem(
                       'Retenção de água e solo',
                       '${m.water.toStringAsFixed(1)} L/ano',
                       Icons.water_drop,
                       color: Colors.blue,
-                      description: '$waterTanks caixa(s) d\'água de reserva.',
+                      description:
+                          '${formatter.waterTanks} caixa(s) d\'água de reserva.',
                     ),
                     _buildItem(
                       'Biodiversidade (ex: abelhas e polinizadores)',
@@ -169,7 +175,7 @@ class _ImpactPageState extends State<ImpactPage> {
                       Icons.bug_report,
                       color: Colors.orange,
                       description:
-                          'Atrai até $beeVisits visita${beeVisits == 1 ? '' : 's'} de abelhas por mês.',
+                          'Atrai até ${formatter.beeVisits} visita${formatter.beeVisits == 1 ? '' : 's'} de abelhas por mês.',
                     ),
                     _buildItem(
                       'Melhoria na qualidade do ar',
@@ -177,7 +183,7 @@ class _ImpactPageState extends State<ImpactPage> {
                       Icons.air_outlined,
                       color: Colors.blueGrey,
                       description:
-                          'Equivale a usar $purifiers purificador${purifiers == 1 ? '' : 'es'} de ar por 24h.',
+                          'Equivale a usar ${formatter.purifiers} purificador${formatter.purifiers == 1 ? '' : 'es'} de ar por 24h.',
                     ),
                   ],
                 ),

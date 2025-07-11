@@ -61,7 +61,7 @@ class _ProcessingPageState extends State<ProcessingPage> {
       },
       (_) async {
         setState(() => _success = true);
-        await Future.delayed(const Duration(milliseconds: 1500));
+        await Future.delayed(const Duration(milliseconds: 1400));
         if (mounted) Navigator.pop(context, true);
       },
     );
@@ -70,59 +70,68 @@ class _ProcessingPageState extends State<ProcessingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: _success
-            ? Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Lottie.asset(
-                    AppAssets.lottieSuccess,
-                    width: context.screenWidth * .5,
-                    repeat: true,
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Planta registrada com sucesso!',
-                    style: context.textTheme.bodyLarge?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+      body: PopScope(
+        canPop: false,
+        child: Center(
+          child: _success
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Lottie.asset(
+                      AppAssets.lottieSuccess,
+                      width: context.screenWidth * .5,
+                      repeat: true,
                     ),
-                  ),
-                ],
-              )
-            : Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  AppCircularIndicatorWidget(),
-                  const SizedBox(height: 20),
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 500),
-                    switchInCurve: Curves.easeInOut,
-                    switchOutCurve: Curves.easeInOut,
-                    transitionBuilder: (child, animation) {
-                      final offsetAnimation = Tween<Offset>(
-                        begin: const Offset(0, 1),
-                        end: Offset.zero,
-                      ).animate(animation);
-                      if (animation.status == AnimationStatus.reverse) {
-                        return FadeTransition(opacity: animation, child: child);
-                      }
-                      return SlideTransition(
-                        position: offsetAnimation,
-                        child: FadeTransition(opacity: animation, child: child),
-                      );
-                    },
-                    child: Text(
-                      _message,
-                      key: ValueKey<String>(_message),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Planta registrada com sucesso!',
                       style: context.textTheme.bodyLarge?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                )
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AppCircularIndicatorWidget(),
+                    const SizedBox(height: 20),
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 500),
+                      switchInCurve: Curves.easeInOut,
+                      switchOutCurve: Curves.easeInOut,
+                      transitionBuilder: (child, animation) {
+                        final offsetAnimation = Tween<Offset>(
+                          begin: const Offset(0, 1),
+                          end: Offset.zero,
+                        ).animate(animation);
+                        if (animation.status == AnimationStatus.reverse) {
+                          return FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          );
+                        }
+                        return SlideTransition(
+                          position: offsetAnimation,
+                          child: FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: Text(
+                        _message,
+                        key: ValueKey<String>(_message),
+                        style: context.textTheme.bodyLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+        ),
       ),
     );
   }

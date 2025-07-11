@@ -13,11 +13,16 @@ class ImpactDatasourceImpl implements ImpactDatasource {
 
   @override
   Future<int> countPlantings(String userId) async {
-    final data = await _client.select(
-      table: TablesDB.plantings.name,
-      columns: 'id',
-      filters: {'user_id': userId},
-    );
-    return data.length;
+    try {
+      final data = await _client.select(
+        table: TablesDB.plantings.name,
+        columns: 'id',
+        filters: {'user_id': userId},
+      );
+
+      return data.length;
+    } catch (e) {
+      rethrow;
+    }
   }
 }

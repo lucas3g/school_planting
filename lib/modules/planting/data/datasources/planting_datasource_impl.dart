@@ -23,23 +23,27 @@ class PlantingDatasourceImpl implements PlantingDatasource {
     required double lat,
     required double long,
   }) async {
-    final File compressed = await compressImage(image);
+    try {
+      final File compressed = await compressImage(image);
 
-    await _client.uploadFile(
-      bucket: 'escolaverdebucket',
-      path: 'private/$imageName',
-      file: compressed,
-    );
+      await _client.uploadFile(
+        bucket: 'escolaverdebucket',
+        path: 'private/$imageName',
+        file: compressed,
+      );
 
-    await _client.insert(
-      table: TablesDB.plantings.name,
-      data: {
-        'user_id': userId,
-        'description': description,
-        'image_url': imageName,
-        'lat': lat,
-        'long': long,
-      },
-    );
+      await _client.insert(
+        table: TablesDB.plantings.name,
+        data: {
+          'user_id': userId,
+          'description': description,
+          'image_url': imageName,
+          'lat': lat,
+          'long': long,
+        },
+      );
+    } catch (e) {
+      rethrow;
+    }
   }
 }

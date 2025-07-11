@@ -54,6 +54,9 @@ class _PlantingPageState extends State<PlantingPage> {
   }
 
   Future<void> _takePhoto() async {
+    _descFocusNode.unfocus();
+    FocusScope.of(context).requestFocus(FocusNode());
+
     final XFile? picked = await _picker.pickImage(
       source: ImageSource.camera,
       preferredCameraDevice: CameraDevice.rear,
@@ -67,6 +70,7 @@ class _PlantingPageState extends State<PlantingPage> {
   Future<void> _handleButtonTap() async {
     if (!_formKey.currentState!.validate()) return;
     _descFocusNode.unfocus();
+    FocusScope.of(context).requestFocus(FocusNode());
 
     if (_image == null) {
       showAppSnackbar(
@@ -92,7 +96,10 @@ class _PlantingPageState extends State<PlantingPage> {
     }
 
     final myPosition = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 10,
+      ),
     );
 
     final String uuid = const Uuid().v4();
@@ -211,7 +218,7 @@ class _PlantingPageState extends State<PlantingPage> {
                                   ),
                                 ),
                                 const SizedBox(height: 10),
-                                GestureDetector(
+                                InkWell(
                                   onTap: _takePhoto,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(2),
@@ -223,43 +230,71 @@ class _PlantingPageState extends State<PlantingPage> {
                                         strokeWidth: 2,
                                         dashPattern: const [10, 5],
                                       ),
-                                      child: SizedBox(
-                                        height: context.screenHeight * .5,
-                                        width: context.screenWidth,
-                                        child: _image != null
-                                            ? ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                      AppThemeConstants
-                                                          .mediumBorderRadius,
-                                                    ),
-                                                child: Image.file(
-                                                  _image!,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              )
-                                            : Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Icon(
-                                                    Icons.camera_alt,
-                                                    size: 50,
-                                                    color: Colors.grey.shade700,
-                                                  ),
-                                                  Text(
-                                                    'Toque para tirar uma foto',
-                                                    style: context
-                                                        .textTheme
-                                                        .bodyLarge
-                                                        ?.copyWith(
-                                                          color: Colors
-                                                              .grey
-                                                              .shade700,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          SizedBox(
+                                            height: context.screenHeight * .5,
+                                            width: context.screenWidth,
+                                            child: _image != null
+                                                ? ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          AppThemeConstants
+                                                              .mediumBorderRadius,
                                                         ),
+                                                    child: Image.file(
+                                                      _image!,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  )
+                                                : Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.camera_alt,
+                                                        size: 50,
+                                                        color: Colors
+                                                            .grey
+                                                            .shade700,
+                                                      ),
+                                                      Text(
+                                                        'Toque para tirar uma foto',
+                                                        style: context
+                                                            .textTheme
+                                                            .bodyLarge
+                                                            ?.copyWith(
+                                                              color: Colors
+                                                                  .grey
+                                                                  .shade700,
+                                                            ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                ],
-                                              ),
+                                          ),
+                                          _image != null
+                                              ? Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    const SizedBox(height: 10),
+                                                    Text(
+                                                      'Toque na foto para tirar outra.',
+                                                      style: context
+                                                          .textTheme
+                                                          .bodyLarge
+                                                          ?.copyWith(
+                                                            color: Colors
+                                                                .grey
+                                                                .shade700,
+                                                          ),
+                                                    ),
+                                                  ],
+                                                )
+                                              : const SizedBox.shrink(),
+                                        ],
                                       ),
                                     ),
                                   ),

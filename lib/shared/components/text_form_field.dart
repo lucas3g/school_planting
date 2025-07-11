@@ -129,7 +129,9 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
           ),
         ),
         hintStyle: context.textTheme.bodyMedium?.copyWith(
-          color: widget.borderColor ?? context.myTheme.surface.withAlpha(150),
+          color:
+              widget.borderColor?.withAlpha(150) ??
+              context.myTheme.surface.withAlpha(150),
         ),
         hintText: widget.hint,
         suffixIcon: widget.hideInput

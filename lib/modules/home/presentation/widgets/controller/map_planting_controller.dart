@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
+import 'package:school_planting/core/domain/entities/app_assets.dart';
 import 'package:school_planting/modules/home/domain/entities/planting_detail_entity.dart';
 
 @injectable
@@ -16,7 +17,7 @@ class MapPlantingController {
   Future<BitmapDescriptor> _getMarkerIcon() async {
     return BitmapDescriptor.asset(
       const ImageConfiguration(size: Size(50, 50)),
-      'assets/images/marker.png',
+      AppAssets.marker,
     );
   }
 
@@ -28,7 +29,10 @@ class MapPlantingController {
     }
 
     final Position current = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
+      locationSettings: LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 10,
+      ),
     );
 
     final LatLng pos = LatLng(current.latitude, current.longitude);
@@ -81,7 +85,10 @@ class MapPlantingController {
     }
 
     final Position current = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
+      locationSettings: LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 10,
+      ),
     );
 
     final LatLng pos = LatLng(current.latitude, current.longitude);
