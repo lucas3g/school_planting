@@ -30,6 +30,14 @@
           }
         },
         {
+          "client_id": "664527003731-d2ne5skjlh5heihe0gqrpmfnff81r5bs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.maktub.greenmap",
+            "certificate_hash": "52b62661508a714ae79dc0dce911a4133122ed13"
+          }
+        },
+        {
           "client_id": "664527003731-8b5of2jov2k127sgiulk1abekpup8ua6.apps.googleusercontent.com",
           "client_type": 3
         }
