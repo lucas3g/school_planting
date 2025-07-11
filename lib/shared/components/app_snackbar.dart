@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:school_planting/core/domain/entities/app_assets.dart';
 
 import '../themes/app_theme_constants.dart';
 
@@ -109,10 +110,10 @@ Color _returnBackgroundColor(TypeSnack type) {
 
 String _returnLottieFile(TypeSnack type) {
   final Map<TypeSnack, String> map = <TypeSnack, String>{
-    TypeSnack.success: 'assets/lotties/success.json',
-    TypeSnack.error: 'assets/lotties/failed.json',
-    TypeSnack.warning: 'assets/lotties/warning.json',
-    TypeSnack.help: 'assets/lotties/info.json',
+    TypeSnack.success: AppAssets.lottieSuccess,
+    TypeSnack.error: AppAssets.lottieError,
+    TypeSnack.warning: AppAssets.lottieWarning,
+    TypeSnack.help: AppAssets.lottieInfo,
   };
 
   return map[type]!;

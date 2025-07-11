@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:school_planting/core/constants/constants.dart';
 import 'package:school_planting/core/di/dependency_injection.dart';
+import 'package:school_planting/core/domain/entities/app_assets.dart';
 import 'package:school_planting/modules/planting/domain/entities/planting_entity.dart';
 import 'package:school_planting/modules/planting/domain/usecases/create_planting_usecase.dart';
 import 'package:school_planting/modules/planting/domain/usecases/validate_plant_image_usecase.dart';
@@ -75,7 +76,7 @@ class _ProcessingPageState extends State<ProcessingPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Lottie.asset(
-                    'assets/lotties/success.json',
+                    AppAssets.lottieSuccess,
                     width: context.screenWidth * .5,
                     repeat: true,
                   ),

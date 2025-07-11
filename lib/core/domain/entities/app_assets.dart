@@ -3,4 +3,8 @@ class AppAssets {
 
   static const String logo = 'assets/images/logo.png';
   static const String google = 'assets/images/google.png';
+  static const String lottieSuccess = 'assets/lotties/success.json';
+  static const String lottieError = 'assets/lotties/error.json';
+  static const String lottieWarning = 'assets/lotties/warning.json';
+  static const String lottieInfo = 'assets/lotties/info.json';
 }
