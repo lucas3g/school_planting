@@ -13,6 +13,7 @@ import 'package:school_planting/modules/auth/presentation/controller/auth_states
 import 'package:school_planting/shared/components/app_circular_indicator_widget.dart';
 import 'package:school_planting/shared/components/app_snackbar.dart';
 import 'package:school_planting/shared/themes/app_theme_constants.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -63,6 +64,21 @@ class _AuthPageState extends State<AuthPage> {
 
     return Text(
       'Entrar com o Google',
+      style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+    );
+  }
+
+  Widget _handleButtonApple(AuthStates states) {
+    if (states is AuthLoadingState) {
+      return const AppCircularIndicatorWidget(size: 20);
+    }
+
+    if (states is AuthSuccessState) {
+      return const Icon(Icons.check, color: Colors.white, size: 25);
+    }
+
+    return Text(
+      'Entrar com a Apple',
       style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
     );
   }
@@ -145,6 +161,21 @@ class _AuthPageState extends State<AuthPage> {
                               ? Image.asset(AppAssets.google, width: 25)
                               : null,
                           label: _handleButtonGoogle(state),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    BlocBuilder<AuthBloc, AuthStates>(
+                      bloc: _authBloc,
+                      builder: (context, state) {
+                        return SignInWithAppleButton(
+                          onPressed: () {
+                            _authBloc.add(LoginWithAppleAccountEvent());
+                          },
+                          borderRadius: BorderRadius.circular(20),
+                          textStyle: context.textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         );
                       },
                     ),

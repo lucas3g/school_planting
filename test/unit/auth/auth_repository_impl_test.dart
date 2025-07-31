@@ -39,6 +39,28 @@ void main() {
       }, (_) => null);
     });
 
+    test('loginWithAppleAccount returns user on success', () async {
+      final user = UserEntity(id: '1', email: 'a', name: 'b');
+      when(datasource.loginWithAppleAccount()).thenAnswer((_) async => user);
+
+      final result = await repository.loginWithAppleAccount();
+
+      verify(datasource.loginWithAppleAccount()).called(1);
+      expect(result.isRight, true);
+    });
+
+    test('loginWithAppleAccount returns failure on exception', () async {
+      when(datasource.loginWithAppleAccount()).thenThrow(Exception('err'));
+
+      final result = await repository.loginWithAppleAccount();
+
+      expect(result.isLeft, true);
+      result.get((failure) {
+        expect(failure, isA<AuthException>());
+        return null;
+      }, (_) => null);
+    });
+
     test('autoLogin returns data from datasource', () async {
       when(datasource.autoLogin()).thenAnswer((_) async => null);
 

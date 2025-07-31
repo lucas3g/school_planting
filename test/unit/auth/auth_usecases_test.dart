@@ -4,6 +4,7 @@ import 'package:school_planting/core/domain/entities/usecase.dart';
 import 'package:school_planting/modules/auth/domain/entities/user_entity.dart';
 import 'package:school_planting/modules/auth/domain/usecases/auto_login.dart';
 import 'package:school_planting/modules/auth/domain/usecases/login_with_google_account.dart';
+import 'package:school_planting/modules/auth/domain/usecases/login_with_apple_account.dart';
 import 'package:school_planting/modules/auth/domain/usecases/logout_account.dart';
 
 import '../../helpers/mocks.dart';
@@ -13,12 +14,14 @@ void main() {
   group('Auth usecases', () {
     late MockAuthRepository repository;
     late LoginWithGoogleAccountUseCase login;
+    late LoginWithAppleAccountUseCase loginApple;
     late AutoLoginUseCase autoLogin;
     late LogoutAccountUsecase logout;
 
     setUp(() {
       repository = MockAuthRepository();
       login = LoginWithGoogleAccountUseCase(authRepository: repository);
+      loginApple = LoginWithAppleAccountUseCase(authRepository: repository);
       autoLogin = AutoLoginUseCase(authRepository: repository);
       logout = LogoutAccountUsecase(authRepository: repository);
     });
@@ -31,6 +34,17 @@ void main() {
       final result = await login(const NoArgs());
 
       verify(repository.loginWithGoogleAccount()).called(1);
+      expect(result.isRight, true);
+    });
+
+    test('login with apple calls repository', () async {
+      final user = UserEntity(id: '1', email: 'a', name: 'b');
+      when(repository.loginWithAppleAccount())
+          .thenAnswer((_) async => resolve(user));
+
+      final result = await loginApple(const NoArgs());
+
+      verify(repository.loginWithAppleAccount()).called(1);
       expect(result.isRight, true);
     });
 

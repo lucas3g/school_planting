@@ -22,6 +22,8 @@ import '../../modules/auth/domain/repositories/auth_repository.dart' as _i779;
 import '../../modules/auth/domain/usecases/auto_login.dart' as _i51;
 import '../../modules/auth/domain/usecases/login_with_google_account.dart'
     as _i854;
+import '../../modules/auth/domain/usecases/login_with_apple_account.dart'
+    as _i1060;
 import '../../modules/auth/domain/usecases/logout_account.dart' as _i720;
 import '../../modules/auth/presentation/controller/auth_bloc.dart' as _i311;
 import '../../modules/home/data/datasources/map_planting_datasource.dart'
@@ -199,6 +201,11 @@ extension GetItInjectableX on _i174.GetIt {
         authRepository: gh<_i779.AuthRepository>(),
       ),
     );
+    gh.factory<_i1060.LoginWithAppleAccountUseCase>(
+      () => _i1060.LoginWithAppleAccountUseCase(
+        authRepository: gh<_i779.AuthRepository>(),
+      ),
+    );
     gh.factory<_i720.LogoutAccountUsecase>(
       () => _i720.LogoutAccountUsecase(
         authRepository: gh<_i779.AuthRepository>(),
@@ -208,6 +215,8 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i311.AuthBloc(
         loginWithGoogleAccountUseCase:
             gh<_i854.LoginWithGoogleAccountUseCase>(),
+        loginWithAppleAccountUseCase:
+            gh<_i1060.LoginWithAppleAccountUseCase>(),
         logoutAccountUsecase: gh<_i720.LogoutAccountUsecase>(),
       ),
     );
