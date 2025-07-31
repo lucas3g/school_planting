@@ -13,7 +13,6 @@ import 'package:school_planting/modules/auth/presentation/controller/auth_states
 import 'package:school_planting/shared/components/app_circular_indicator_widget.dart';
 import 'package:school_planting/shared/components/app_snackbar.dart';
 import 'package:school_planting/shared/themes/app_theme_constants.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -74,12 +73,15 @@ class _AuthPageState extends State<AuthPage> {
     }
 
     if (states is AuthSuccessState) {
-      return const Icon(Icons.check, color: Colors.white, size: 25);
+      return const Icon(Icons.check, color: Colors.black, size: 25);
     }
 
     return Text(
       'Entrar com a Apple',
-      style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+      style: context.textTheme.bodyLarge?.copyWith(
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
     );
   }
 
@@ -168,14 +170,27 @@ class _AuthPageState extends State<AuthPage> {
                     BlocBuilder<AuthBloc, AuthStates>(
                       bloc: _authBloc,
                       builder: (context, state) {
-                        return SignInWithAppleButton(
+                        return ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.all(10),
+                            backgroundColor: context.myTheme.inverseSurface,
+                            textStyle: context.textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                            fixedSize: Size(context.screenWidth, 50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
                           onPressed: () {
                             _authBloc.add(LoginWithAppleAccountEvent());
                           },
-                          borderRadius: BorderRadius.circular(20),
-                          textStyle: context.textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          icon:
+                              state is! AuthLoadingState &&
+                                  state is! AuthSuccessState
+                              ? Image.asset(AppAssets.apple, width: 25)
+                              : null,
+                          label: _handleButtonApple(state),
                         );
                       },
                     ),

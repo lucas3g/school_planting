@@ -57,7 +57,7 @@ const darkColorSchemePapagaio = ColorScheme(
   onSurfaceVariant: Color(0xFFC1C9BE),
   outline: Color(0xFF8B9389),
   onInverseSurface: Color(0xFF1A1C19),
-  inverseSurface: Color(0xFFE2E3DD),
+  inverseSurface: Color.fromARGB(255, 255, 255, 255),
   inversePrimary: Color(0xFF006D2F),
   shadow: Color(0xFF000000),
   surfaceTint: Color(0xFF68DE83),
