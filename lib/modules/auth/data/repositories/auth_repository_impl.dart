@@ -26,6 +26,18 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<EitherOf<AppFailure, UserEntity>> loginWithAppleAccount() async {
+    try {
+      final user = await _authDatasource.loginWithAppleAccount();
+      return resolve(user);
+    } on AppFailure catch (error) {
+      return reject(error);
+    } catch (error) {
+      return reject(AuthException(error.toString()));
+    }
+  }
+
+  @override
   Future<EitherOf<AppFailure, UserEntity?>> autoLogin() async {
     try {
       final UserEntity? user = await _authDatasource.autoLogin();

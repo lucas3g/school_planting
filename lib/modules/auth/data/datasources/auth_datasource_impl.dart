@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:injectable/injectable.dart';
 import 'package:school_planting/core/data/clients/supabase/supabase_client_interface.dart';
 import 'package:school_planting/core/domain/entities/app_global.dart';
@@ -51,6 +52,34 @@ class AuthDatasourceImpl implements AuthDatasource {
 
       AppGlobal.instance.setUser(user);
 
+      return user;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<UserEntity> loginWithAppleAccount() async {
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      final result = await _supabaseClient.signInWithIdToken(
+        provider: OAuthProvider.apple,
+        idToken: credential.identityToken!,
+        accessToken: credential.authorizationCode,
+      );
+
+      if (result.user == null) {
+        throw 'Usuário não encontrado após autenticação com a Apple.';
+      }
+
+      final user = UserAdapter.fromSupabase(result.user!);
+      AppGlobal.instance.setUser(user);
       return user;
     } catch (e) {
       rethrow;
