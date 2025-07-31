@@ -30,13 +30,13 @@ class AuthBloc extends Bloc<AuthEvents, AuthStates> {
     LoginWithGoogleAccountEvent event,
     Emitter<AuthStates> emit,
   ) async {
-    emit(state.loading());
+    emit(state.loading(AuthProvider.google));
 
     final result = await _loginWithGoogleAccountUseCase(NoArgs());
 
     result.get(
       (failure) => emit(state.failure(failure.message)),
-      (user) => emit(state.success(user)),
+      (user) => emit(state.success(user, AuthProvider.google)),
     );
   }
 
@@ -44,13 +44,13 @@ class AuthBloc extends Bloc<AuthEvents, AuthStates> {
     LoginWithAppleAccountEvent event,
     Emitter<AuthStates> emit,
   ) async {
-    emit(state.loading());
+    emit(state.loading(AuthProvider.apple));
 
     final result = await _loginWithAppleAccountUseCase(NoArgs());
 
     result.get(
       (failure) => emit(state.failure(failure.message)),
-      (user) => emit(state.success(user)),
+      (user) => emit(state.success(user, AuthProvider.apple)),
     );
   }
 
@@ -58,7 +58,7 @@ class AuthBloc extends Bloc<AuthEvents, AuthStates> {
     LogoutAccountEvent event,
     Emitter<AuthStates> emit,
   ) async {
-    emit(state.loading());
+    emit(state.loading(AuthProvider.google));
 
     await Future.delayed(const Duration(seconds: 1));
 

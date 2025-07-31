@@ -53,11 +53,13 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Widget _handleButtonGoogle(AuthStates states) {
-    if (states is AuthLoadingState) {
+    if (states is AuthLoadingState &&
+        states.provider == AuthProvider.google) {
       return const AppCircularIndicatorWidget(size: 20);
     }
 
-    if (states is AuthSuccessState) {
+    if (states is AuthSuccessState &&
+        states.provider == AuthProvider.google) {
       return const Icon(Icons.check, color: Colors.white, size: 25);
     }
 
@@ -68,11 +70,12 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Widget _handleButtonApple(AuthStates states) {
-    if (states is AuthLoadingState) {
+    if (states is AuthLoadingState && states.provider == AuthProvider.apple) {
       return const AppCircularIndicatorWidget(size: 20);
     }
 
-    if (states is AuthSuccessState) {
+    if (states is AuthSuccessState &&
+        states.provider == AuthProvider.apple) {
       return const Icon(Icons.check, color: Colors.black, size: 25);
     }
 
@@ -157,11 +160,12 @@ class _AuthPageState extends State<AuthPage> {
                           onPressed: () {
                             _authBloc.add(LoginWithGoogleAccountEvent());
                           },
-                          icon:
-                              state is! AuthLoadingState &&
-                                  state is! AuthSuccessState
-                              ? Image.asset(AppAssets.google, width: 25)
-                              : null,
+                          icon: (state is AuthLoadingState &&
+                                      state.provider == AuthProvider.google) ||
+                                  (state is AuthSuccessState &&
+                                      state.provider == AuthProvider.google)
+                              ? null
+                              : Image.asset(AppAssets.google, width: 25),
                           label: _handleButtonGoogle(state),
                         );
                       },
@@ -185,11 +189,12 @@ class _AuthPageState extends State<AuthPage> {
                           onPressed: () {
                             _authBloc.add(LoginWithAppleAccountEvent());
                           },
-                          icon:
-                              state is! AuthLoadingState &&
-                                  state is! AuthSuccessState
-                              ? Image.asset(AppAssets.apple, width: 25)
-                              : null,
+                          icon: (state is AuthLoadingState &&
+                                      state.provider == AuthProvider.apple) ||
+                                  (state is AuthSuccessState &&
+                                      state.provider == AuthProvider.apple)
+                              ? null
+                              : Image.asset(AppAssets.apple, width: 25),
                           label: _handleButtonApple(state),
                         );
                       },

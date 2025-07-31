@@ -1,10 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:school_planting/modules/auth/domain/entities/user_entity.dart';
 
-abstract class AuthStates {
-  AuthLoadingState loading() => AuthLoadingState();
+enum AuthProvider { google, apple }
 
-  AuthSuccessState success(UserEntity user) => AuthSuccessState(user: user);
+abstract class AuthStates {
+  AuthLoadingState loading(AuthProvider provider) => AuthLoadingState(provider);
+
+  AuthSuccessState success(UserEntity user, AuthProvider provider) =>
+      AuthSuccessState(user: user, provider: provider);
 
   AuthFailureState failure(String message) => AuthFailureState(message);
 
@@ -13,12 +16,17 @@ abstract class AuthStates {
 
 class AuthInitialState extends AuthStates {}
 
-class AuthLoadingState extends AuthStates {}
+class AuthLoadingState extends AuthStates {
+  final AuthProvider provider;
+
+  AuthLoadingState(this.provider);
+}
 
 class AuthSuccessState extends AuthStates {
-  UserEntity user;
+  final UserEntity user;
+  final AuthProvider provider;
 
-  AuthSuccessState({required this.user});
+  AuthSuccessState({required this.user, required this.provider});
 }
 
 class AuthFailureState extends AuthStates {
